@@ -20,7 +20,8 @@ function dbMessage(error: { message?: string } | null) {
 }
 /** Shared checks: same origin, configured, and an admin session. Returns the admin client or a response. */
 async function guard(req: Request) {
-  if (!sameOrigin(req)) return fail("طلب غير مسموح", 403);
+  // Browsers omit Origin on same-origin GET requests, so the check applies to changes only.
+  if (req.method !== "GET" && !sameOrigin(req)) return fail("طلب غير مسموح", 403);
   if (!configured()) return fail("غير مصرح", 401);
   const db = await adminClient();
   if (!db) return fail("غير مصرح", 401);
