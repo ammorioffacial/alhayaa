@@ -58,16 +58,17 @@ export function useShopping(products: Product[], demo: boolean) {
     setPreview("");
     setPreviewUrl("");
   }
-  function add(p: Product) {
+  function add(p: Product, amount = 1) {
     if (!p.available) return;
+    const added = Math.max(1, Math.min(99, Math.trunc(amount) || 1));
     setCart((c) =>
       c.some((i) => i.id === p.id)
         ? c.map((i) =>
             i.id === p.id
-              ? { ...i, quantity: Math.min(99, i.quantity + 1) }
+              ? { ...i, quantity: Math.min(99, i.quantity + added) }
               : i,
           )
-        : [...c, { id: p.id, name: p.name, price: p.price, quantity: 1 }],
+        : [...c, { id: p.id, name: p.name, price: p.price, quantity: added }],
     );
     setNotice(`أُضيف ${p.name} إلى السلة`);
     clearPreview();

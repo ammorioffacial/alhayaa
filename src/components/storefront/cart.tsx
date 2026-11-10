@@ -18,22 +18,29 @@ export default function Cart({
   products,
   demo,
   close,
+  returnFocus,
 }: {
   shop: ReturnType<typeof useShopping>;
   products: Product[];
   demo: boolean;
   close: () => void;
+  returnFocus?: HTMLElement | null;
 }) {
   const feedbackRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (shop.preview) feedbackRef.current?.scrollIntoView({ block: "nearest" });
   }, [shop.preview]);
   return (
-    <Dialog cart title={`سلّتك (${shop.count})`} close={close}>
+    <Dialog
+      cart
+      title={`سلّتك (${shop.count})`}
+      close={close}
+      returnFocus={returnFocus}
+    >
       {!shop.cart.length ? (
         <div className="sf-empty-cart">
           <span>
-            <ShoppingBag size={40} />
+            <ShoppingBag aria-hidden="true" size={40} />
           </span>
           <h3>سلّتك تنتظر اختياراتك</h3>
           <p>كل روتين جميل يبدأ باختيار صغير.</p>
@@ -45,7 +52,7 @@ export default function Cart({
         <>
           <div className="sf-cart-scroll">
             <div className="sf-cart-intro">
-              <ShoppingBag size={18} />
+              <ShoppingBag aria-hidden="true" size={18} />
               <span>اختياراتك، في مكان واحد</span>
               <small>{shop.count} قطع</small>
             </div>
@@ -75,7 +82,7 @@ export default function Cart({
                               shop.quantity(item.id, item.quantity - 1)
                             }
                           >
-                            <Minus size={16} />
+                            <Minus aria-hidden="true" size={16} />
                           </button>
                           <output aria-label={`كمية ${item.name}`}>
                             {item.quantity}
@@ -87,7 +94,7 @@ export default function Cart({
                               shop.quantity(item.id, item.quantity + 1)
                             }
                           >
-                            <Plus size={16} />
+                            <Plus aria-hidden="true" size={16} />
                           </button>
                         </div>
                         <button
@@ -95,7 +102,7 @@ export default function Cart({
                           aria-label={`حذف ${item.name}`}
                           onClick={() => shop.quantity(item.id, 0)}
                         >
-                          <Trash2 size={17} />
+                          <Trash2 aria-hidden="true" size={17} />
                           <span>حذف</span>
                         </button>
                       </div>
@@ -119,7 +126,7 @@ export default function Cart({
             >
               <div className="sf-form-heading">
                 <span>
-                  <MapPin size={19} />
+                  <MapPin aria-hidden="true" size={19} />
                 </span>
                 <div>
                   <h3>تفاصيل التوصيل</h3>
@@ -195,7 +202,7 @@ export default function Cart({
               </div>
             )}
             <p className="sf-confirm-note">
-              <ShieldCheck size={16} />
+              <ShieldCheck aria-hidden="true" size={16} />
               فتح واتساب لا يؤكد الطلب؛ أرسلي الرسالة لتأكيده مع الصيدلية.
             </p>
           </div>
@@ -212,7 +219,7 @@ export default function Cart({
               disabled={shop.busy}
             >
               {shop.busy ? "جارٍ التحقق من المنتجات…" : "أرسل الطلب على واتساب"}
-              <MessageCircle size={20} />
+              <MessageCircle aria-hidden="true" size={20} />
             </button>
           </div>
         </>

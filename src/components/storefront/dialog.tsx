@@ -6,11 +6,13 @@ export default function Dialog({
   close,
   children,
   cart = false,
+  returnFocus,
 }: {
   title: string;
   close: () => void;
   children: React.ReactNode;
   cart?: boolean;
+  returnFocus?: HTMLElement | null;
 }) {
   const closeRef = useRef(close);
   const dialogRef = useRef<HTMLElement>(null);
@@ -18,7 +20,7 @@ export default function Dialog({
     closeRef.current = close;
   }, [close]);
   useEffect(() => {
-    const previous = document.activeElement as HTMLElement;
+    const previous = returnFocus || (document.activeElement as HTMLElement);
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const root = dialogRef.current;
@@ -27,7 +29,7 @@ export default function Dialog({
       if (e.key === "Escape") closeRef.current();
       if (e.key !== "Tab") return;
       const els = root?.querySelectorAll<HTMLElement>(
-        'button:not(:disabled),a[href],input,textarea,select,[tabindex="0"]',
+        'button:not(:disabled),a[href],input:not(:disabled),textarea:not(:disabled),select:not(:disabled),[tabindex="0"]',
       );
       if (!els?.length) return;
       const first = els[0],
@@ -50,9 +52,12 @@ export default function Dialog({
     return () => {
       document.body.style.overflow = overflow;
       document.removeEventListener("keydown", key);
-      previous?.focus({ preventScroll: true });
+      // React must remove inert from the browsing surface before restoring focus.
+      requestAnimationFrame(() => {
+        if (previous?.isConnected) previous.focus({ preventScroll: true });
+      });
     };
-  }, []);
+  }, [returnFocus]);
   return (
     <div
       className={`sf-dialog-backdrop ${cart ? "sf-cart-backdrop" : ""}`}
@@ -70,7 +75,11 @@ export default function Dialog({
       >
         <div className="sf-dialog-heading">
           <button aria-label="إغلاق" onClick={close}>
-            {cart ? <ArrowRight /> : <X />}
+            {cart ? (
+              <ArrowRight aria-hidden="true" />
+            ) : (
+              <X aria-hidden="true" />
+            )}
           </button>
           <h2>{title}</h2>
           <span className="sf-dialog-wordmark">حياة المجد</span>

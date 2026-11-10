@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @next/next/no-location-assign-relative-destination -- clear server-rendered authenticated state on logout */
 import { useState } from "react";
+import { ExternalLink, LogOut, Plus } from "lucide-react";
 import { categories, money, type Product } from "@/lib/catalog";
 import Brand from "./brand";
 const empty: Omit<Product, "id"> = {
@@ -117,7 +118,7 @@ export default function Admin({
       <div className="admin-top">
         <Brand />
         <a href="/" target="_blank" rel="noreferrer">
-          عرض المتجر ↗
+          عرض المتجر <ExternalLink size={16} aria-hidden="true" />
         </a>
         <button
           disabled={busy || uploading}
@@ -130,13 +131,15 @@ export default function Admin({
             }
           }}
         >
+          <LogOut size={16} aria-hidden="true" />
           تسجيل الخروج
         </button>
       </div>
-      <div className="admin-top">
+      <div className="admin-top admin-heading">
         <div>
           <span className="eyebrow">لوحة تحكم الدكتور</span>
           <h1>إدارة المنتجات</h1>
+          <p>أضف منتجات الصيدلية وحدّث صورها وأسعارها وتوفرها.</p>
         </div>
         <button
           disabled={busy || uploading}
@@ -147,7 +150,7 @@ export default function Admin({
             setMessage("");
           }}
         >
-          + إضافة منتج
+          <Plus size={19} aria-hidden="true" /> إضافة منتج
         </button>
       </div>
       {error && (
@@ -163,11 +166,13 @@ export default function Admin({
       {draft && (
         <section className="admin-editor">
           <h2>{draft.id ? "تعديل المنتج" : "منتج جديد"}</h2>
-          <form className="form" onSubmit={save}>
+          <form className="form" onSubmit={save} aria-busy={busy || uploading}>
             <div className="form-grid">
               <label>
                 اسم المنتج
                 <input
+                  name="product-name"
+                  autoComplete="off"
                   required
                   minLength={2}
                   maxLength={150}
@@ -178,6 +183,8 @@ export default function Admin({
               <label>
                 الماركة
                 <input
+                  name="brand"
+                  autoComplete="off"
                   required
                   maxLength={80}
                   value={draft.brand}
@@ -189,6 +196,7 @@ export default function Admin({
               <label>
                 التصنيف
                 <select
+                  name="category"
                   value={draft.category}
                   onChange={(e) =>
                     setDraft({
@@ -205,7 +213,9 @@ export default function Admin({
               <label>
                 السعر بالدينار العراقي
                 <input
+                  name="price"
                   type="number"
+                  inputMode="numeric"
                   min={1}
                   max={10000000}
                   step={1}
@@ -220,6 +230,8 @@ export default function Admin({
             <label>
               وصف المنتج
               <textarea
+                name="description"
+                autoComplete="off"
                 required
                 minLength={5}
                 maxLength={3000}
@@ -232,6 +244,7 @@ export default function Admin({
             <label>
               صورة المنتج (JPG / PNG / WebP — حتى 5 MB)
               <input
+                name="product-image"
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
                 disabled={uploading || busy}
@@ -244,10 +257,13 @@ export default function Admin({
                 className="upload-preview"
                 src={draft.image_url}
                 alt="معاينة صورة المنتج"
+                width={140}
+                height={140}
               />
             )}
             <label className="check-label">
               <input
+                name="available"
                 type="checkbox"
                 checked={draft.available}
                 onChange={(e) =>
@@ -258,6 +274,7 @@ export default function Admin({
             </label>
             <label className="check-label">
               <input
+                name="featured"
                 type="checkbox"
                 checked={draft.featured}
                 onChange={(e) =>
@@ -268,6 +285,7 @@ export default function Admin({
             </label>
             <label className="check-label">
               <input
+                name="is-demo"
                 type="checkbox"
                 checked={draft.is_demo}
                 onChange={(e) =>
@@ -294,13 +312,16 @@ export default function Admin({
       <div className="catalog-toolbar">
         <label className="search">
           <input
+            name="catalog-search"
+            autoComplete="off"
             aria-label="البحث في المنتجات"
-            placeholder="ابحث عن اسم أو ماركة"
+            placeholder="ابحث عن اسم أو ماركة…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </label>
         <select
+          name="category-filter"
           aria-label="تصفية حسب التصنيف"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -310,18 +331,23 @@ export default function Admin({
             <option key={c}>{c}</option>
           ))}
         </select>
-        <span>{shown.length} منتجات</span>
+        <span role="status">
+          {new Intl.NumberFormat("ar-IQ").format(shown.length)} منتجات
+        </span>
       </div>
       <div className="admin-table-wrap">
         <table className="admin-table">
+          <caption className="sr-only">
+            منتجات الصيدلية وإجراءات إدارتها
+          </caption>
           <thead>
             <tr>
-              <th>الصورة</th>
-              <th>المنتج</th>
-              <th>التصنيف</th>
-              <th>السعر</th>
-              <th>الحالة</th>
-              <th>الإجراءات</th>
+              <th scope="col">الصورة</th>
+              <th scope="col">المنتج</th>
+              <th scope="col">التصنيف</th>
+              <th scope="col">السعر</th>
+              <th scope="col">الحالة</th>
+              <th scope="col">الإجراءات</th>
             </tr>
           </thead>
           <tbody>
@@ -331,6 +357,9 @@ export default function Admin({
                   <img
                     src={p.image_url || "/products/placeholder.svg"}
                     alt={p.name}
+                    width={62}
+                    height={62}
+                    loading="lazy"
                   />
                 </td>
                 <td>
@@ -339,7 +368,13 @@ export default function Admin({
                 </td>
                 <td>{p.category}</td>
                 <td>{money(p.price)}</td>
-                <td>{p.available ? "متوفر" : "نفد"}</td>
+                <td>
+                  <span
+                    className={`admin-availability${p.available ? "" : " is-unavailable"}`}
+                  >
+                    {p.available ? "متوفر" : "نفد"}
+                  </span>
+                </td>
                 <td>
                   <button
                     disabled={busy || uploading}
@@ -347,12 +382,20 @@ export default function Admin({
                       setDraft(p);
                       setError("");
                       setMessage("");
-                      window.scrollTo({ top: 0, behavior: "smooth" });
+                      window.scrollTo({
+                        top: 0,
+                        behavior: window.matchMedia(
+                          "(prefers-reduced-motion: reduce)",
+                        ).matches
+                          ? "instant"
+                          : "smooth",
+                      });
                     }}
                   >
                     تعديل
                   </button>
                   <button
+                    className="admin-delete"
                     disabled={busy || uploading}
                     onClick={() => remove(p)}
                   >

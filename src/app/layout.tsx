@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import "@fontsource-variable/noto-sans-arabic";
+import "@fontsource/ibm-plex-sans-arabic/400.css";
+import "@fontsource/ibm-plex-sans-arabic/500.css";
+import "@fontsource/ibm-plex-sans-arabic/600.css";
+import "@fontsource/ibm-plex-sans-arabic/700.css";
 import "./globals.css";
 import "./storefront.css";
-import "./mobile-store.css";
+import "../components/storefront/product-experience.css";
 export const metadata: Metadata = {
   title: "صيدلية حياة المجد | عناية تستحقينها",
   description:
