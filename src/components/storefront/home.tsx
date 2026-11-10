@@ -1,9 +1,10 @@
 "use client";
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import {
   Search,
   ShoppingBag,
+  ShoppingCart,
   ArrowLeft,
   ArrowUpLeft,
   X,
@@ -18,8 +19,10 @@ import {
   SlidersHorizontal,
   Sun,
   LayoutGrid,
+  Sparkles,
 } from "lucide-react";
-import { categories, type Product } from "@/lib/catalog";
+import type { Category, Product } from "@/lib/catalog";
+import { productCount } from "@/lib/arabic-plural";
 import Brand from "../brand";
 import ProductCard from "./product-card";
 import ProductDetail from "./product-detail";
@@ -28,15 +31,21 @@ import Dialog from "./dialog";
 import Cart from "./cart";
 import { useShopping } from "./use-shopping";
 import { useFavorites } from "./use-favorites";
+import { useReveal } from "./use-reveal";
+import CountUp from "./count-up";
+import HeroVideo from "./hero-video";
+import { CART_ARRIVE_EVENT } from "./fly-to-cart";
+import type { HeroClip } from "@/lib/hero-media";
 type Sort = "featured" | "price-asc" | "price-desc" | "name";
 
 function EditorialCollection({
   onSelect,
 }: {
-  onSelect: (category: string) => void;
+  onSelect: (slug: string) => void;
 }) {
+  const reveal = useReveal<HTMLDivElement>();
   return (
-    <div className="sf-editorial">
+    <div className="sf-editorial sf-reveal" ref={reveal}>
       <Image
         src="/images/care-editorial-1200.webp"
         width={1200}
@@ -45,14 +54,14 @@ function EditorialCollection({
         alt="صورة تعبيرية لمستحضرات العناية على حجر طبيعي"
       />
       <div>
-        <span>وقتٌ لكِ</span>
+        <span className="sf-eyebrow">وقتٌ لكِ</span>
         <h2>
           روتينكِ،
           <br />
           على طريقتكِ.
         </h2>
-        <button onClick={() => onSelect("العناية بالبشرة")}>
-          اكتشفي العناية بالبشرة <ArrowLeft aria-hidden="true" size={17} />
+        <button onClick={() => onSelect("skin-care")}>
+          اكتشفي العناية بالبشرة <ArrowLeft aria-hidden="true" size={19} />
         </button>
       </div>
     </div>
@@ -61,14 +70,23 @@ function EditorialCollection({
 
 export default function Store({
   products,
+  categories: allCategories,
   demo,
   loadError,
+  heroVideos = [],
 }: {
   products: Product[];
+  categories: Category[];
   demo: boolean;
   loadError?: string;
+  heroVideos?: HeroClip[];
 }) {
+  // Only visible categories that have at least one product are shown (owner decision).
+  const categories = allCategories.filter(
+    (c) => c.is_visible && products.some((p) => p.category?.slug === c.slug),
+  );
   const [search, setSearch] = useState("");
+  // Selected category slug, or "الكل" for every product.
   const [category, setCategory] = useState("الكل");
   const [selected, setSelected] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
@@ -81,6 +99,22 @@ export default function Store({
   const [returnFocus, setReturnFocus] = useState<HTMLElement | null>(null);
   const shop = useShopping(products, demo);
   const { favorites, toggle } = useFavorites();
+  const catalogReveal = useReveal<HTMLElement>();
+  const collectionsReveal = useReveal<HTMLElement>();
+  const helpReveal = useReveal<HTMLElement>();
+  const trustReveal = useReveal<HTMLDivElement>();
+  // The cart badges pop when the flying dot arrives, not when the item is added.
+  useEffect(() => {
+    function pop() {
+      document.querySelectorAll<HTMLElement>("[data-cart-count]").forEach((el) => {
+        el.classList.remove("is-pop");
+        void el.offsetWidth;
+        el.classList.add("is-pop");
+      });
+    }
+    window.addEventListener(CART_ARRIVE_EVENT, pop);
+    return () => window.removeEventListener(CART_ARRIVE_EVENT, pop);
+  }, []);
   const isFiltered =
     category !== "الكل" ||
     !!search.trim() ||
@@ -90,7 +124,10 @@ export default function Store({
   const shown = products
     .filter(
       (p) =>
-        (category === "الكل" || p.category === category) &&
+        // Products in a hidden category stay in the admin only.
+        p.category !== null &&
+        p.category.is_visible &&
+        (category === "الكل" || p.category.slug === category) &&
         `${p.name} ${p.brand}`
           .toLocaleLowerCase("ar")
           .includes(search.trim().toLocaleLowerCase("ar")) &&
@@ -107,9 +144,6 @@ export default function Store({
             : Number(b.featured) - Number(a.featured),
     );
   const featured = shown.filter((p) => p.featured);
-  const first = isFiltered || !featured.length ? shown : featured;
-  const rest =
-    isFiltered || !featured.length ? [] : shown.filter((p) => !p.featured);
   function go(id: string) {
     document.getElementById(id)?.scrollIntoView({
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -162,9 +196,10 @@ export default function Store({
     setActive("categories");
     go("catalog");
   }
-  const card = (p: Product) => (
+  const card = (p: Product, index: number) => (
     <ProductCard
       key={p.id}
+      index={index}
       product={p}
       onAdd={shop.add}
       onInspect={inspect}
@@ -174,24 +209,15 @@ export default function Store({
   );
   return (
     <div className="storefront" id="store-home">
+      <div className="sf-ambient" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
       <div className="sf-browse" inert={cartOpen || !!selected}>
         <a className="sf-skip" href="#catalog">
           انتقلي إلى المنتجات
         </a>
-        <div className="sf-service-strip">
-          <div className="sf-shell">
-            <span>
-              <Truck aria-hidden="true" size={15} /> من صيدليتنا إلى باب بيتكِ
-            </span>
-            <span className="sf-strip-location">
-              <MapPin aria-hidden="true" size={14} /> بغداد، حي الجامعة
-            </span>
-            <a href="tel:07711191871">
-              <Phone aria-hidden="true" size={14} />
-              <bdi>0771 119 1871</bdi>
-            </a>
-          </div>
-        </div>
         <header className="sf-site-header">
           <div className="sf-header sf-shell">
             <Brand />
@@ -250,12 +276,13 @@ export default function Store({
               </button>
               <button
                 className="sf-header-cart"
+                data-cart-target
                 aria-label={`السلة، ${shop.count} قطع`}
                 onClick={openCart}
               >
-                <ShoppingBag aria-hidden="true" size={21} />
+                <ShoppingCart aria-hidden="true" size={21} />
                 <span>سلّتي</span>
-                <b>{shop.count}</b>
+                <b data-cart-count>{shop.count}</b>
               </button>
             </div>
           </div>
@@ -270,30 +297,30 @@ export default function Store({
                     go("catalog");
                   }}
                 >
-                  <LayoutGrid aria-hidden="true" size={17} /> كل المنتجات
+                  <LayoutGrid aria-hidden="true" size={18} /> كل المنتجات
                 </a>
                 {categories.map((c) => (
                   <a
-                    key={c}
+                    key={c.id}
                     href="#catalog"
-                    aria-current={category === c ? "page" : undefined}
+                    aria-current={category === c.slug ? "page" : undefined}
                     onClick={(e) => {
                       e.preventDefault();
-                      choose(c);
+                      choose(c.slug);
                     }}
                   >
-                    {c}
+                    {c.name_ar}
                   </a>
                 ))}
                 <a href="#about">عن الصيدلية</a>
               </nav>
               <a
-                className="sf-nav-contact"
+                className="sf-nav-contact sf-whatsapp-pulse"
                 href="https://wa.me/9647711191871"
                 target="_blank"
                 rel="noreferrer"
               >
-                <MessageCircle aria-hidden="true" size={16} /> اسألي الصيدلية
+                <MessageCircle aria-hidden="true" size={18} /> اسألي الصيدلية
               </a>
             </div>
           </div>
@@ -303,84 +330,92 @@ export default function Store({
             className="sf-campaign sf-shell"
             aria-labelledby="hero-heading"
           >
+            <div className="sf-campaign-art">
+              <HeroVideo clips={heroVideos} />
+            </div>
+            <div className="sf-campaign-shade" aria-hidden="true" />
             <div className="sf-campaign-copy">
               <span className="sf-kicker">
-                <span /> من صيدليتكِ في بغداد
+                <Sparkles aria-hidden="true" size={17} />
+                حياة المجد، صيدليتكِ في بغداد
               </span>
               <h1 id="hero-heading">
-                كل يوم،
+                عنايةٌ أقرب.
                 <br />
-                عناية تليق بكِ.
+                حياةٌ أجمل.
               </h1>
               <p>
-                اختيارات البشرة والشعر والجمال،
-                <br className="sf-desktop-break" /> في مكان واحد قريب منكِ.
+                من أول خطوة في روتينكِ، إلى تفاصيلكِ المفضّلة.
+                <br className="sf-desktop-break" /> اكتشفي عالم البشرة والشعر
+                والجمال.
               </p>
-              <button
-                className="sf-primary"
-                onClick={() => {
-                  reset();
-                  go("catalog");
-                }}
-              >
-                اكتشفي منتجات العناية <ArrowLeft aria-hidden="true" size={19} />
-              </button>
+              <div className="sf-hero-actions">
+                <button
+                  className="sf-primary"
+                  onClick={() => {
+                    reset();
+                    go("catalog");
+                  }}
+                >
+                  ابدئي رحلة العناية <ArrowLeft aria-hidden="true" size={19} />
+                </button>
+                <a
+                  className="sf-ghost"
+                  href="https://wa.me/9647711191871"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <MessageCircle aria-hidden="true" size={19} /> واتساب الصيدلية
+                </a>
+              </div>
               <span className="sf-hero-foot">
-                <MessageCircle aria-hidden="true" size={16} /> اختاري منتجاتكِ
+                <ShieldCheck aria-hidden="true" size={18} /> اختاري منتجاتكِ
                 ونسّقي طلبكِ عبر واتساب
               </span>
             </div>
-            <div className="sf-campaign-art">
-              <span className="sf-art-ring" aria-hidden="true" />
-              <Image
-                src="/images/care-bag-hero.webp"
-                width={700}
-                height={700}
-                sizes="(max-width: 767px) 210px, (max-width: 1100px) 380px, 520px"
-                alt="رسم ثلاثي الأبعاد لحقيبة تضم مستحضرات العناية"
-                fetchPriority="high"
-                loading="eager"
-              />
-              <span className="sf-art-label">
-                <ShieldCheck aria-hidden="true" size={23} />
-                <span>
-                  عنايتكِ اليومية<small>تبدأ باختياركِ</small>
-                </span>
-              </span>
-            </div>
           </section>
-          <div className="sf-shell sf-service-row">
+          <div className="sf-shell sf-service-row" ref={trustReveal}>
             <span>
-              <ShieldCheck aria-hidden="true" size={21} />
+              <ShieldCheck aria-hidden="true" size={24} />
               <span>
                 صيدليتكِ في حي الجامعة
                 <small>قريبون منكِ ومن تفاصيل عنايتكِ</small>
               </span>
             </span>
             <span>
-              <MessageCircle aria-hidden="true" size={21} />
+              <ShoppingBag aria-hidden="true" size={24} />
               <span>
-                تواصل مباشر مع الصيدلية<small>للاستفسار وتنسيق الطلبات</small>
+                {productCount(products.length)}
+                <small>معروضة في المتجر الآن</small>
               </span>
             </span>
             <span>
-              <Truck aria-hidden="true" size={22} />
+              <LayoutGrid aria-hidden="true" size={24} />
+              <span>
+                <CountUp to={categories.length} /> أقسام
+                <small>لتسوّقي حسب احتياجكِ</small>
+              </span>
+            </span>
+            <span>
+              <Truck aria-hidden="true" size={24} />
               <span>
                 توصيل داخل بغداد
                 <small>التفاصيل والرسوم تُؤكّد عبر واتساب</small>
               </span>
             </span>
           </div>
-          <div className="sf-shell">
+          <div className="sf-shell sf-content">
             <CategoryShortcuts
               selected={category}
               onSelect={choose}
               products={products}
+              categories={categories}
             />
             <section
               id="catalog"
-              className="sf-catalog"
+              className="sf-catalog sf-reveal"
               aria-labelledby="catalog-heading"
+              ref={catalogReveal}
             >
               <div className="sf-section-title sf-catalog-heading">
                 <div>
@@ -390,7 +425,7 @@ export default function Store({
                       : search
                         ? "نتائج البحث"
                         : category !== "الكل"
-                          ? category
+                          ? categories.find((c) => c.slug === category)?.name_ar ?? category
                           : isFiltered
                             ? "منتجات العناية"
                             : featured.length
@@ -409,7 +444,7 @@ export default function Store({
                     role="status"
                     aria-live="polite"
                   >
-                    {shown.length} منتجات
+                    {productCount(shown.length)}
                   </span>
                   <button
                     className="sf-mobile-filter"
@@ -418,7 +453,7 @@ export default function Store({
                     aria-controls="catalog-filters"
                     onClick={() => setShowFilters((v) => !v)}
                   >
-                    <SlidersHorizontal aria-hidden="true" size={19} />
+                    <SlidersHorizontal aria-hidden="true" size={20} />
                     {isFiltered && <span className="sf-filter-indicator" />}
                   </button>
                 </div>
@@ -443,12 +478,12 @@ export default function Store({
                   </button>
                   {(category !== "الكل" || search || favoritesOnly) && (
                     <button className="sf-filter-reset" onClick={reset}>
-                      مسح التصفية <X aria-hidden="true" size={14} />
+                      مسح التصفية <X aria-hidden="true" size={16} />
                     </button>
                   )}
                 </div>
                 <label className="sf-sort">
-                  <SlidersHorizontal aria-hidden="true" size={17} />
+                  <SlidersHorizontal aria-hidden="true" size={18} />
                   <span className="sf-sort-label">ترتيب حسب</span>
                   <select
                     aria-label="ترتيب المنتجات"
@@ -482,9 +517,9 @@ export default function Store({
               ) : !shown.length ? (
                 <div className="sf-empty">
                   {favoritesOnly ? (
-                    <Heart aria-hidden="true" size={35} />
+                    <Heart aria-hidden="true" size={38} />
                   ) : (
-                    <Search aria-hidden="true" size={35} />
+                    <Search aria-hidden="true" size={38} />
                   )}
                   <h3>
                     {favoritesOnly
@@ -503,41 +538,31 @@ export default function Store({
                   </button>
                 </div>
               ) : (
-                <>
-                  <div className="sf-product-grid">{first.map(card)}</div>
-                  {rest.length > 0 && (
-                    <>
-                      <div className="sf-section-title sf-more-heading">
-                        <div>
-                          <h2>المزيد لعنايتكِ</h2>
-                          <p>كمّلي روتينكِ بما يناسبكِ</p>
-                        </div>
-                      </div>
-                      <div className="sf-product-grid sf-secondary-grid">
-                        {rest.map(card)}
-                        <EditorialCollection onSelect={choose} />
-                      </div>
-                    </>
-                  )}
-                </>
+                <div
+                  className="sf-product-grid"
+                  key={`${category}-${sort}-${availableOnly}-${favoritesOnly}`}
+                >
+                  {shown.map(card)}
+                </div>
               )}
             </section>
             <section
-              className={`sf-collections ${rest.length ? "sf-collections-wide" : ""}`}
+              className="sf-collections sf-reveal"
               aria-label="مجموعات العناية"
+              ref={collectionsReveal}
             >
-              {!rest.length && <EditorialCollection onSelect={choose} />}
+              <EditorialCollection onSelect={choose} />
               <div className="sf-suncare">
-                <Sun aria-hidden="true" size={25} />
+                <Sun aria-hidden="true" size={30} />
                 <div>
-                  <span>عناية ترافق يومكِ</span>
+                  <span className="sf-eyebrow">عناية ترافق يومكِ</span>
                   <h2>
                     شمس بغداد؟
                     <br />
                     خلي العناية وياكِ.
                   </h2>
-                  <button onClick={() => choose("واقيات الشمس")}>
-                    تسوّقي المجموعة <ArrowLeft aria-hidden="true" size={17} />
+                  <button onClick={() => choose("sun-care")}>
+                    تسوّقي المجموعة <ArrowLeft aria-hidden="true" size={19} />
                   </button>
                 </div>
                 <Image
@@ -549,12 +574,16 @@ export default function Store({
                 />
               </div>
             </section>
-            <section className="sf-help" id="about">
+            <section
+              className="sf-help sf-reveal"
+              id="about"
+              ref={helpReveal}
+            >
               <div className="sf-help-icon">
-                <MessageCircle aria-hidden="true" size={30} />
+                <MessageCircle aria-hidden="true" size={32} />
               </div>
               <div>
-                <span className="sf-kicker">صيدلية حياة المجد</span>
+                <span className="sf-eyebrow">صيدلية حياة المجد</span>
                 <h2>قريبون منكِ، حتى قبل طلبكِ.</h2>
                 <p>
                   عندكِ سؤال عن منتج؟ تواصلي مع الصيدلية مباشرة،
@@ -563,12 +592,12 @@ export default function Store({
                 </p>
               </div>
               <a
-                className="sf-primary"
+                className="sf-primary sf-whatsapp-pulse"
                 href="https://wa.me/9647711191871"
                 target="_blank"
                 rel="noreferrer"
               >
-                تواصلي على واتساب <ArrowUpLeft aria-hidden="true" size={18} />
+                تواصلي على واتساب <ArrowUpLeft aria-hidden="true" size={19} />
               </a>
             </section>
           </div>
@@ -587,29 +616,29 @@ export default function Store({
               <h3>تسوّقي معنا</h3>
               {categories.map((c) => (
                 <a
-                  key={c}
+                  key={c.id}
                   href="#catalog"
                   onClick={(e) => {
                     e.preventDefault();
-                    choose(c);
+                    choose(c.slug);
                   }}
                 >
-                  {c}
+                  {c.name_ar}
                 </a>
               ))}
             </div>
             <div>
               <h3>زورينا في الصيدلية</h3>
               <p className="sf-address">
-                <MapPin aria-hidden="true" size={18} />
+                <MapPin aria-hidden="true" size={19} />
                 <span>
-                  بغداد، حي الجامعة، شارع ٦٦
+                  بغداد، حي الجامعة، شارع 66
                   <br />
                   مجاور مركز الجامعة للأشعة التشخيصية
                 </span>
               </p>
               <a href="tel:07711191871">
-                <Phone aria-hidden="true" size={17} />
+                <Phone aria-hidden="true" size={18} />
                 <bdi>0771 119 1871</bdi>
               </a>
             </div>
@@ -620,14 +649,14 @@ export default function Store({
                 target="_blank"
                 rel="noreferrer"
               >
-                <MessageCircle aria-hidden="true" size={17} /> واتساب
+                <MessageCircle aria-hidden="true" size={18} /> واتساب
               </a>
               <a
                 href="https://www.instagram.com/hayat_almajd.pharmacy/"
                 target="_blank"
                 rel="noreferrer"
               >
-                <Instagram aria-hidden="true" size={17} /> إنستغرام
+                <Instagram aria-hidden="true" size={18} /> إنستغرام
               </a>
             </div>
           </div>
@@ -647,7 +676,7 @@ export default function Store({
       </div>
       {shop.notice && !cartOpen && (
         <div className="sf-toast" role="status">
-          <Check aria-hidden="true" size={18} />
+          <Check aria-hidden="true" size={19} />
           {shop.notice}
         </div>
       )}

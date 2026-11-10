@@ -14,7 +14,10 @@ export async function POST(req: Request) {
         { error: "حجم الصورة يتجاوز 5 ميغابايت" },
         { status: 400 },
       );
-    const file = (await req.formData()).get("file");
+    const form = await req.formData();
+    const file = form.get("file");
+    // Category images go under their own prefix; anything else lands in the bucket root.
+    const folder = form.get("folder") === "categories" ? "categories/" : "";
     if (
       !(file instanceof File) ||
       !["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
@@ -38,7 +41,7 @@ export async function POST(req: Request) {
         { error: "محتوى الملف لا يطابق نوع الصورة." },
         { status: 400 },
       );
-    const path = `${crypto.randomUUID()}.${file.type.split("/")[1]}`;
+    const path = `${folder}${crypto.randomUUID()}.${file.type.split("/")[1]}`;
     const { error } = await db.storage
       .from("product-images")
       .upload(path, bytes, { contentType: file.type, upsert: false });

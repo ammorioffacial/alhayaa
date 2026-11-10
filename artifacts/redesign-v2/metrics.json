@@ -1,0 +1,119 @@
+{
+  "baseURL": "http://127.0.0.1:3001",
+  "widths": [
+    {
+      "width": 375,
+      "horizontalScroll": false,
+      "scrollWidth": 375,
+      "badgeBefore": "0",
+      "badgeAfterFirstAdd": [
+        "1",
+        "1"
+      ],
+      "badgeAfterSecondAdd": [
+        "2",
+        "2"
+      ],
+      "fly": {
+        "waapiDurationMs": 1200,
+        "observedMs": 1263,
+        "popDuringFlight": false,
+        "popAfterArrival": true
+      },
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "width": 430,
+      "horizontalScroll": false,
+      "scrollWidth": 430,
+      "badgeBefore": "0",
+      "badgeAfterFirstAdd": [
+        "1",
+        "1"
+      ],
+      "badgeAfterSecondAdd": [
+        "2",
+        "2"
+      ],
+      "fly": {
+        "waapiDurationMs": 1200,
+        "observedMs": 1235,
+        "popDuringFlight": false,
+        "popAfterArrival": true
+      },
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "width": 768,
+      "horizontalScroll": false,
+      "scrollWidth": 768,
+      "badgeBefore": "0",
+      "badgeAfterFirstAdd": [
+        "1",
+        "1"
+      ],
+      "badgeAfterSecondAdd": [
+        "2",
+        "2"
+      ],
+      "fly": {
+        "waapiDurationMs": 1200,
+        "observedMs": 1273,
+        "popDuringFlight": false,
+        "popAfterArrival": true
+      },
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "width": 1024,
+      "horizontalScroll": false,
+      "scrollWidth": 1024,
+      "badgeBefore": "0",
+      "badgeAfterFirstAdd": [
+        "1",
+        "1"
+      ],
+      "badgeAfterSecondAdd": [
+        "2",
+        "2"
+      ],
+      "fly": {
+        "waapiDurationMs": 1200,
+        "observedMs": 1307,
+        "popDuringFlight": false,
+        "popAfterArrival": true
+      },
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "width": 1440,
+      "horizontalScroll": false,
+      "scrollWidth": 1440,
+      "badgeBefore": "0",
+      "badgeAfterFirstAdd": [
+        "1",
+        "1"
+      ],
+      "badgeAfterSecondAdd": [
+        "2",
+        "2"
+      ],
+      "fly": {
+        "waapiDurationMs": 1200,
+        "observedMs": 1243,
+        "popDuringFlight": false,
+        "popAfterArrival": true
+      },
+      "pageErrors": [],
+      "consoleErrors": []
+    }
+  ],
+  "serverHtmlArabicIndicDigits": {
+    "bytes": 49795,
+    "arabicIndicCount": 0
+  }
+}

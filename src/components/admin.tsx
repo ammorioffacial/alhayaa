@@ -3,30 +3,49 @@
 /* eslint-disable @next/next/no-location-assign-relative-destination -- clear server-rendered authenticated state on logout */
 import { useState } from "react";
 import { ExternalLink, LogOut, Plus } from "lucide-react";
-import { categories, money, type Product } from "@/lib/catalog";
+import { formatPrice, type Category, type Product } from "@/lib/catalog";
+import { productCount } from "@/lib/arabic-plural";
 import Brand from "./brand";
-const empty: Omit<Product, "id"> = {
-  name: "",
-  brand: "",
-  category: categories[0],
-  description: "",
-  price: 0,
-  image_url: "",
-  available: true,
-  featured: false,
-  is_demo: false,
+import AdminDashboard from "./admin-dashboard";
+/** The product form's draft. The category is chosen by id from the categories table. */
+type Draft = {
+  id?: string;
+  name: string;
+  brand: string;
+  category_id: string;
+  description: string;
+  price: number;
+  image_url: string;
+  available: boolean;
+  featured: boolean;
+  is_demo: boolean;
 };
+function emptyDraft(categories: Category[]): Draft {
+  return {
+    name: "",
+    brand: "",
+    category_id: categories[0]?.id ?? "",
+    description: "",
+    price: 0,
+    image_url: "",
+    available: true,
+    featured: false,
+    is_demo: false,
+  };
+}
 export default function Admin({
   initial,
+  categories,
   loadError,
 }: {
   initial: Product[];
+  categories: Category[];
   loadError: string;
 }) {
   const [products, setProducts] = useState(initial),
     [search, setSearch] = useState(""),
     [category, setCategory] = useState("الكل"),
-    [draft, setDraft] = useState<(typeof empty & { id?: string }) | null>(null),
+    [draft, setDraft] = useState<Draft | null>(null),
     [busy, setBusy] = useState(false),
     [uploading, setUploading] = useState(false),
     [error, setError] = useState(loadError),
@@ -110,7 +129,7 @@ export default function Admin({
   }
   const shown = products.filter(
     (p) =>
-      (category === "الكل" || p.category === category) &&
+      (category === "الكل" || p.category_id === category) &&
       `${p.name} ${p.brand}`.toLowerCase().includes(search.toLowerCase()),
   );
   return (
@@ -120,6 +139,7 @@ export default function Admin({
         <a href="/" target="_blank" rel="noreferrer">
           عرض المتجر <ExternalLink size={16} aria-hidden="true" />
         </a>
+        <a href="/admin/categories">التصنيفات</a>
         <button
           disabled={busy || uploading}
           onClick={async () => {
@@ -145,7 +165,7 @@ export default function Admin({
           disabled={busy || uploading}
           className="primary"
           onClick={() => {
-            setDraft({ ...empty });
+            setDraft(emptyDraft(categories));
             setError("");
             setMessage("");
           }}
@@ -153,6 +173,7 @@ export default function Admin({
           <Plus size={19} aria-hidden="true" /> إضافة منتج
         </button>
       </div>
+      <AdminDashboard products={products} categories={categories} />
       {error && (
         <p className="field-error" role="alert">
           {error}
@@ -197,17 +218,18 @@ export default function Admin({
                 التصنيف
                 <select
                   name="category"
-                  value={draft.category}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      category: e.target.value as typeof draft.category,
-                    })
-                  }
+                  value={draft.category_id}
+                  onChange={(e) => setDraft({ ...draft, category_id: e.target.value })}
                 >
-                  {categories.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
+                  {/* Visible categories, plus the product's current one even if it is hidden. */}
+                  {categories
+                    .filter((c) => c.is_visible || c.id === draft.category_id)
+                    .map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name_ar}
+                        {!c.is_visible ? " (مخفي)" : ""}
+                      </option>
+                    ))}
                 </select>
               </label>
               <label>
@@ -326,13 +348,16 @@ export default function Admin({
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
-          <option>الكل</option>
+          <option value="الكل">الكل</option>
           {categories.map((c) => (
-            <option key={c}>{c}</option>
+            <option key={c.id} value={c.id}>
+              {c.name_ar}
+              {!c.is_visible ? " (مخفي)" : ""}
+            </option>
           ))}
         </select>
         <span role="status">
-          {new Intl.NumberFormat("ar-IQ").format(shown.length)} منتجات
+          {productCount(shown.length)}
         </span>
       </div>
       <div className="admin-table-wrap">
@@ -366,8 +391,8 @@ export default function Admin({
                   {p.name}
                   {p.is_demo && <small> (تجريبي)</small>}
                 </td>
-                <td>{p.category}</td>
-                <td>{money(p.price)}</td>
+                <td>{p.category?.name_ar ?? "—"}</td>
+                <td>{formatPrice(p.price)}</td>
                 <td>
                   <span
                     className={`admin-availability${p.available ? "" : " is-unavailable"}`}

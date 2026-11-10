@@ -50,7 +50,7 @@ test("live Supabase admin CRUD, image upload, authoritative checkout and logout"
     await page.getByLabel("السعر بالدينار العراقي").fill("1500");
     await page.getByRole("button", { name: "حفظ المنتج" }).click();
     await expect(page.getByRole("row").filter({ hasText: name })).toContainText(
-      "١٬٥٠٠",
+      "1,500 IQD",
     );
     const order = {
       customer: {

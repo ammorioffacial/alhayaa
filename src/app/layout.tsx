@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import "@fontsource/ibm-plex-sans-arabic/400.css";
-import "@fontsource/ibm-plex-sans-arabic/500.css";
-import "@fontsource/ibm-plex-sans-arabic/600.css";
-import "@fontsource/ibm-plex-sans-arabic/700.css";
+import "@fontsource/zain/400.css";
+import "@fontsource/zain/700.css";
+import "@fontsource/zain/800.css";
 import "./globals.css";
 import "./storefront.css";
 import "../components/storefront/product-experience.css";

@@ -1,79 +1,77 @@
 "use client";
-import Image from "next/image";
-import {
-  Home,
-  LayoutGrid,
-  Search,
-  ShoppingBag,
-  Heart,
-  ArrowUpLeft,
-} from "lucide-react";
-import { categories, type Product } from "@/lib/catalog";
+/* eslint-disable @next/next/no-img-element */
+// Category images come from the database (any https URL), so plain <img> is used.
+import { Home, LayoutGrid, ShoppingBag, Heart, ArrowUpLeft, Sparkles } from "lucide-react";
+import { productCount } from "@/lib/arabic-plural";
+import type { Category, Product } from "@/lib/catalog";
+import { useReveal } from "./use-reveal";
 export type Destination =
   "home" | "categories" | "search" | "favorites" | "cart";
-const categoryArt = [
-  "skincare-care",
-  "hair-and-body",
-  "sun-care",
-  "beauty-polish",
-];
-const categoryNotes = [
-  "كل ما يحتاجه روتينكِ",
-  "من الجذور إلى الأطراف",
-  "رفيقتكِ في كل يوم",
-  "تفاصيل تعبّر عنكِ",
-];
+/** Category shortcuts: image when the category has one, otherwise a circular badge in its accent color. */
 export function CategoryShortcuts({
   selected,
   onSelect,
   products,
+  categories,
 }: {
   selected: string;
-  onSelect: (category: string) => void;
+  onSelect: (slug: string) => void;
   products: Product[];
+  categories: Category[];
 }) {
+  const reveal = useReveal<HTMLElement>();
   return (
     <section
       id="categories"
-      className="sf-category-section"
+      className="sf-category-section sf-reveal"
       aria-labelledby="category-heading"
+      ref={reveal}
     >
       <div className="sf-section-title">
-        <h2 id="category-heading">لكل عناية، مساحة</h2>
+        <h2 id="category-heading">اختاري عالم عنايتكِ</h2>
         <span>تسوّقي حسب احتياجكِ</span>
       </div>
       <div className="sf-categories" aria-label="تصنيفات المنتجات">
-        {categories.map((category, i) => (
-          <button
-            key={category}
-            onClick={() => onSelect(category)}
-            aria-label={category}
-            aria-pressed={selected === category}
-            className={`category-${i} ${selected === category ? "is-selected" : ""}`}
-          >
-            <span className="sf-category-art">
-              <Image
-                width={160}
-                height={160}
-                sizes="(max-width: 767px) 78px, 120px"
-                src={`/images/categories/${categoryArt[i]}.webp`}
-                alt=""
-              />
-            </span>
-            <span className="sf-category-copy">
-              <strong>{category}</strong>
-              <small>{categoryNotes[i]}</small>
-              <span>
-                {products.filter((p) => p.category === category).length} منتجات{" "}
-                <ArrowUpLeft aria-hidden="true" size={16} />
+        {categories.map((category, i) => {
+          const count = products.filter((p) => p.category?.slug === category.slug).length;
+          const isSelected = selected === category.slug;
+          return (
+            <button
+              key={category.id}
+              type="button"
+              onClick={() => onSelect(category.slug)}
+              aria-label={category.name_ar}
+              aria-pressed={isSelected}
+              className={`category-${i % 4} ${isSelected ? "is-selected" : ""}`}
+            >
+              <span className="sf-category-art">
+                {category.image_path ? (
+                  <img src={category.image_path} alt="" width={160} height={160} loading="lazy" />
+                ) : (
+                  <span
+                    className="sf-category-badge"
+                    style={{ background: category.accent }}
+                    aria-hidden="true"
+                  >
+                    <Sparkles size={30} strokeWidth={1.6} />
+                  </span>
+                )}
               </span>
-            </span>
-          </button>
-        ))}
+              <span className="sf-category-copy">
+                <strong>{category.name_ar}</strong>
+                {category.description_ar && <small>{category.description_ar}</small>}
+                <span>
+                  {productCount(count)} <ArrowUpLeft aria-hidden="true" size={17} />
+                </span>
+              </span>
+            </button>
+          );
+        })}
       </div>
     </section>
   );
 }
+
 export default function Navigation({
   active,
   count,
@@ -83,29 +81,42 @@ export default function Navigation({
   count: number;
   onNavigate: (to: Destination) => void;
 }) {
-  const destinations = [
+  // Search lives in the header only. "المنتجات" keeps the existing categories destination.
+  const items = [
     { id: "home" as const, label: "الرئيسية", icon: Home },
-    { id: "categories" as const, label: "التصنيفات", icon: LayoutGrid },
-    { id: "search" as const, label: "البحث", icon: Search },
+    { id: "categories" as const, label: "المنتجات", icon: LayoutGrid },
     { id: "favorites" as const, label: "المفضلة", icon: Heart },
-    { id: "cart" as const, label: "السلة", icon: ShoppingBag },
   ];
   return (
     <nav className="sf-bottom-nav" aria-label="التنقل السفلي">
-      {destinations.map(({ id, label, icon: Icon }) => (
-        <button
-          key={id}
-          onClick={() => onNavigate(id)}
-          aria-current={active === id ? "page" : undefined}
-          aria-label={id === "cart" ? `السلة، ${count} قطع` : label}
-        >
-          <span className="sf-nav-icon">
-            <Icon aria-hidden="true" size={21} />
-            {id === "cart" && count > 0 && <b>{count}</b>}
-          </span>
-          <span>{label}</span>
-        </button>
-      ))}
+      <div className="sf-dock-pill">
+        {items.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            type="button"
+            className="sf-dock-item"
+            onClick={() => onNavigate(id)}
+            aria-current={active === id ? "page" : undefined}
+            aria-label={label}
+          >
+            <span className="sf-dock-icon">
+              <Icon aria-hidden="true" />
+            </span>
+            <span>{label}</span>
+          </button>
+        ))}
+      </div>
+      <button
+        type="button"
+        className="sf-dock-cart"
+        onClick={() => onNavigate("cart")}
+        aria-current={active === "cart" ? "page" : undefined}
+        aria-label={`السلة، ${count} قطع`}
+        data-cart-target=""
+      >
+        <ShoppingBag aria-hidden="true" size={24} />
+        {count > 0 && <b data-cart-count>{count}</b>}
+      </button>
     </nav>
   );
 }

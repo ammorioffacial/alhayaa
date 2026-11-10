@@ -1,0 +1,39 @@
+.medical-mascot { --look-x: 0px; --look-y: 0px; --head-turn: 0deg; position: relative; width: 100%; max-width: 480px; margin-inline: auto; isolation: isolate; }
+.mascot-halo { position: absolute; inset: 13% 6% 13%; border-radius: 50%; background: #fff9; border: 1px solid #fff; box-shadow: inset 0 -20px 60px #c0d6e64a; z-index: -1; }
+.mascot-halo::after { content: ""; position: absolute; inset: -22px; border: 1px solid #ffffff80; border-radius: 50%; }
+.mascot-interact { display: block; width: 100%; padding: 0; border-radius: 50%; cursor: pointer; }
+.storefront .mascot-art { display: block; width: 100%; height: auto; overflow: visible; stroke-width: revert; }
+.mascot-greeting { position: absolute; z-index: 2; top: 21%; inset-inline-end: -3%; display: flex; align-items: center; gap: 9px; background: #fff; color: var(--navy); padding: 12px 18px 9px; border-radius: 18px 18px 4px 18px; box-shadow: 0 8px 28px #1c435015; font-size: 16px; font-weight: 700; pointer-events: none; transform: rotate(-5deg); }
+.mascot-status-dot { width: 7px; height: 7px; background: #688c7b; border-radius: 50%; }
+.mascot-controls { display: flex; justify-content: center; align-items: center; gap: 12px; position: relative; margin-top: -20px; color: #496477; font-size: 13px; }
+.mascot-pause { display: flex; align-items: center; gap: 6px; min-height: 44px; border-radius: 24px; padding: 7px 12px; color: var(--navy); background: #ffffffb3; font-size: 13px; }
+.mascot-pause:disabled { opacity: 1; cursor: default; }
+.mascot-float { animation: mascot-float 5s ease-in-out infinite; }
+.mascot-body { transform-origin: 240px 430px; animation: mascot-breathe 5s ease-in-out infinite; }
+.mascot-head-idle { transform-origin: 242px 290px; animation: mascot-nod 7s ease-in-out infinite; }
+.mascot-head-track { transform-origin: 242px 290px; transform: rotate(var(--head-turn)); transition: transform 350ms var(--ease-soft); }
+.mascot-pupils { transform: translate(var(--look-x), var(--look-y)); transition: transform 180ms ease-out; }
+.mascot-eye { transform-box: fill-box; transform-origin: center; animation: mascot-blink 6.7s infinite; }
+.mascot-wave-arm { transform-origin: 300px 326px; transition: transform 500ms var(--ease-soft); }
+.medical-mascot:is([data-state="welcome"], [data-state="wave"]) .mascot-wave-arm { animation: mascot-wave 650ms ease-in-out 3; }
+.medical-mascot[data-state="lookAtPointer"] .mascot-wave-arm { transform: rotate(-7deg); }
+.mascot-mouth-smile { opacity: 0; transition: opacity 200ms; }
+.mascot-mouth-rest { transition: opacity 200ms; }
+.medical-mascot:is([data-state="wave"], [data-state="smile"], [data-state="welcome"]) .mascot-mouth-smile { opacity: 1; }
+.medical-mascot:is([data-state="wave"], [data-state="smile"], [data-state="welcome"]) .mascot-mouth-rest { opacity: 0; }
+.medical-mascot[data-running="false"] * { animation-play-state: paused !important; transition: none !important; }
+.medical-mascot[data-reduced="true"] * { animation: none !important; transform: none; }
+@keyframes mascot-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes mascot-breathe { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(1.012); } }
+@keyframes mascot-nod { 0%,100% { transform: rotate(-1deg); } 50% { transform: rotate(1.5deg); } }
+@keyframes mascot-blink { 0%,43%,47%,80%,84%,100% { transform: scaleY(1); } 45%,82% { transform: scaleY(.08); } }
+@keyframes mascot-wave { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-19deg); } }
+@media (max-width: 767px) {
+ .mascot-greeting { top: 13%; inset-inline-end: -7%; font-size: 12px; padding: 8px 10px 6px; gap: 5px; border-radius: 12px 12px 3px 12px; }
+ .mascot-status-dot { width: 5px; height: 5px; }
+ .mascot-controls { margin-top: -10px; gap: 0; }
+ .mascot-controls > span { display: none; }
+ .mascot-pause { font-size: 12px; padding: 6px 10px; }
+ .mascot-halo::after { inset: -10px; }
+}
+@media (prefers-reduced-motion: reduce) { .medical-mascot * { animation: none !important; transition: none !important; } }

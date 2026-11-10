@@ -1,0 +1,67 @@
+[
+  {
+    "width": 375,
+    "overflow": false,
+    "heroState": {
+      "video": true,
+      "posterLoaded": false
+    },
+    "addFeedbackText": "أُضيف",
+    "flyingDotSeen": true,
+    "cartIntro": "1 قطع",
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "width": 430,
+    "overflow": false,
+    "heroState": {
+      "video": true,
+      "posterLoaded": false
+    },
+    "addFeedbackText": "أُضيف",
+    "flyingDotSeen": true,
+    "cartIntro": "1 قطع",
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "width": 768,
+    "overflow": false,
+    "heroState": {
+      "video": true,
+      "posterLoaded": false
+    },
+    "addFeedbackText": "أُضيف",
+    "flyingDotSeen": true,
+    "cartIntro": "1 قطع",
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "width": 1024,
+    "overflow": false,
+    "heroState": {
+      "video": true,
+      "posterLoaded": false
+    },
+    "addFeedbackText": "أُضيف",
+    "flyingDotSeen": true,
+    "cartIntro": "1 قطع",
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  {
+    "width": 1440,
+    "overflow": false,
+    "heroState": {
+      "video": true,
+      "posterLoaded": false
+    },
+    "addFeedbackText": "أُضيف",
+    "flyingDotSeen": true,
+    "cartIntro": "1 قطع",
+    "pageErrors": [],
+    "consoleErrors": []
+  }
+]

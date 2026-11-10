@@ -43,7 +43,7 @@ Supabase connection/authentication code, API routes, database schemas, real prod
 
 Live authenticated Supabase login, product CRUD and image upload were not exercised. They require a configured, dedicated test project and test administrator; the existing `admin-live.spec.ts` remains available for that environment. The preview uses the project's existing clearly labeled demo products and illustrations, not verified pharmacy stock or product photography. Mobile checks used desktop Chromium viewport emulation, not physical iOS/Android devices.
 
-Original files in `References/`, `icon/`, `public/products/` and the original logo/editorial assets remain intact. Derived WebP assets and the local Arabic font improve loading without an animation/UI framework dependency. The unused Noto font dependency was removed after the switch to IBM Plex Sans Arabic.
+Original files in `References/`, `icon/`, `public/products/` and the original logo/editorial assets remain intact. Derived WebP assets and the local Arabic font improve loading without an animation/UI framework dependency. The storefront uses Zain only.
 
 ## Reproduce
 

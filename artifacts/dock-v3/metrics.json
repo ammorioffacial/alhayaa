@@ -1,0 +1,363 @@
+{
+  "baseURL": "http://127.0.0.1:3001",
+  "widths": [
+    {
+      "width": 375,
+      "geometry": {
+        "nav": {
+          "x": 15,
+          "y": 725,
+          "w": 346,
+          "h": 74
+        },
+        "pill": {
+          "x": 87,
+          "y": 725,
+          "w": 274,
+          "h": 74
+        },
+        "cart": {
+          "x": 15,
+          "y": 731,
+          "w": 60,
+          "h": 60
+        },
+        "badge": {
+          "x": 58,
+          "y": 725,
+          "w": 22,
+          "h": 22
+        },
+        "icon": {
+          "x": 33,
+          "y": 749,
+          "w": 24,
+          "h": 24
+        },
+        "badgeText": "2",
+        "badgeOverlapsIcon": false,
+        "badgeOverlapsItemLabels": false,
+        "cartSize": {
+          "x": 15,
+          "y": 731,
+          "w": 60,
+          "h": 60
+        },
+        "pillBackground": "rgba(255, 255, 255, 0.92)",
+        "pillBackdrop": "none",
+        "pillShadow": "rgba(15, 43, 69, 0.16) 0px 12px 32px 0px",
+        "items": [
+          {
+            "label": "الرئيسية",
+            "icon": {
+              "x": 290,
+              "y": 736,
+              "w": 44,
+              "h": 32
+            },
+            "text": {
+              "x": 290,
+              "y": 770,
+              "w": 44,
+              "h": 18
+            },
+            "box": {
+              "x": 270,
+              "y": 732,
+              "w": 84,
+              "h": 60
+            }
+          },
+          {
+            "label": "المنتجات",
+            "icon": {
+              "x": 202,
+              "y": 736,
+              "w": 44,
+              "h": 32
+            },
+            "text": {
+              "x": 199,
+              "y": 770,
+              "w": 49,
+              "h": 18
+            },
+            "box": {
+              "x": 182,
+              "y": 732,
+              "w": 84,
+              "h": 60
+            }
+          },
+          {
+            "label": "المفضلة",
+            "icon": {
+              "x": 114,
+              "y": 736,
+              "w": 44,
+              "h": 32
+            },
+            "text": {
+              "x": 113,
+              "y": 770,
+              "w": 45,
+              "h": 18
+            },
+            "box": {
+              "x": 94,
+              "y": 732,
+              "w": 84,
+              "h": 60
+            }
+          }
+        ],
+        "labelOverflow": [
+          false,
+          false,
+          false
+        ],
+        "cartInsidePill": false,
+        "navFixed": "fixed",
+        "navBottomPx": 14
+      },
+      "pageErrors": [],
+      "timings": [
+        {
+          "run": 1,
+          "observedMs": 1207,
+          "waapiMs": 1150
+        },
+        {
+          "run": 2,
+          "observedMs": 1235,
+          "waapiMs": 1150
+        },
+        {
+          "run": 3,
+          "observedMs": 1203,
+          "waapiMs": 1150
+        },
+        {
+          "run": 4,
+          "observedMs": 1181,
+          "waapiMs": 1150
+        },
+        {
+          "run": 5,
+          "observedMs": 1238,
+          "waapiMs": 1150
+        },
+        {
+          "run": 6,
+          "observedMs": 1214,
+          "waapiMs": 1150
+        },
+        {
+          "run": 7,
+          "observedMs": 1195,
+          "waapiMs": 1150
+        },
+        {
+          "run": 8,
+          "observedMs": 1293,
+          "waapiMs": 1150
+        },
+        {
+          "run": 9,
+          "observedMs": 1219,
+          "waapiMs": 1150
+        },
+        {
+          "run": 10,
+          "observedMs": 1233,
+          "waapiMs": 1150
+        }
+      ],
+      "summary": {
+        "min": 1181,
+        "max": 1293,
+        "avg": 1222,
+        "allInWindow": true
+      }
+    },
+    {
+      "width": 1440,
+      "geometry": {
+        "nav": {
+          "x": 547,
+          "y": 813,
+          "w": 346,
+          "h": 74
+        },
+        "pill": {
+          "x": 619,
+          "y": 813,
+          "w": 274,
+          "h": 74
+        },
+        "cart": {
+          "x": 547,
+          "y": 819,
+          "w": 60,
+          "h": 60
+        },
+        "badge": {
+          "x": 591,
+          "y": 813,
+          "w": 22,
+          "h": 22
+        },
+        "icon": {
+          "x": 565,
+          "y": 837,
+          "w": 24,
+          "h": 24
+        },
+        "badgeText": "2",
+        "badgeOverlapsIcon": false,
+        "badgeOverlapsItemLabels": false,
+        "cartSize": {
+          "x": 547,
+          "y": 819,
+          "w": 60,
+          "h": 60
+        },
+        "pillBackground": "rgba(255, 255, 255, 0.92)",
+        "pillBackdrop": "none",
+        "pillShadow": "rgba(15, 43, 69, 0.16) 0px 12px 32px 0px",
+        "items": [
+          {
+            "label": "الرئيسية",
+            "icon": {
+              "x": 822,
+              "y": 824,
+              "w": 44,
+              "h": 32
+            },
+            "text": {
+              "x": 822,
+              "y": 858,
+              "w": 44,
+              "h": 18
+            },
+            "box": {
+              "x": 802,
+              "y": 820,
+              "w": 84,
+              "h": 60
+            }
+          },
+          {
+            "label": "المنتجات",
+            "icon": {
+              "x": 734,
+              "y": 824,
+              "w": 44,
+              "h": 32
+            },
+            "text": {
+              "x": 731,
+              "y": 858,
+              "w": 49,
+              "h": 18
+            },
+            "box": {
+              "x": 714,
+              "y": 820,
+              "w": 84,
+              "h": 60
+            }
+          },
+          {
+            "label": "المفضلة",
+            "icon": {
+              "x": 646,
+              "y": 824,
+              "w": 44,
+              "h": 32
+            },
+            "text": {
+              "x": 645,
+              "y": 858,
+              "w": 45,
+              "h": 18
+            },
+            "box": {
+              "x": 626,
+              "y": 820,
+              "w": 84,
+              "h": 60
+            }
+          }
+        ],
+        "labelOverflow": [
+          false,
+          false,
+          false
+        ],
+        "cartInsidePill": false,
+        "navFixed": "fixed",
+        "navBottomPx": 14
+      },
+      "pageErrors": [],
+      "timings": [
+        {
+          "run": 1,
+          "observedMs": 1664,
+          "waapiMs": 1150
+        },
+        {
+          "run": 2,
+          "observedMs": 1341,
+          "waapiMs": 1150
+        },
+        {
+          "run": 3,
+          "observedMs": 1342,
+          "waapiMs": 1150
+        },
+        {
+          "run": 4,
+          "observedMs": 1445,
+          "waapiMs": 1150
+        },
+        {
+          "run": 5,
+          "observedMs": 1424,
+          "waapiMs": 1150
+        },
+        {
+          "run": 6,
+          "observedMs": 1324,
+          "waapiMs": 1150
+        },
+        {
+          "run": 7,
+          "observedMs": 1482,
+          "waapiMs": 1150
+        },
+        {
+          "run": 8,
+          "observedMs": 1366,
+          "waapiMs": 1150
+        },
+        {
+          "run": 9,
+          "observedMs": 1379,
+          "waapiMs": 1150
+        },
+        {
+          "run": 10,
+          "observedMs": 1339,
+          "waapiMs": 1150
+        }
+      ],
+      "summary": {
+        "min": 1324,
+        "max": 1664,
+        "avg": 1411,
+        "allInWindow": false
+      }
+    }
+  ]
+}

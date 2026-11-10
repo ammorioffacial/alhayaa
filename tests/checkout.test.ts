@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { checkoutSchema, reviewOrder, productSchema } from "../src/lib/catalog";
-import { demoProducts } from "../src/lib/demo";
+import { demoCategories, demoProducts } from "../src/lib/demo";
 const input = {
   customer: {
     name: "زبون تجريبي",
@@ -61,11 +61,31 @@ test("product validation rejects invalid price, category and unsafe image URLs",
   for (const change of [
     { price: -1 },
     { price: 1.5 },
-    { category: "unknown" },
+    { category_id: "not-a-uuid" },
     { image_url: "javascript:alert(1)" },
   ])
     assert.equal(
       productSchema.safeParse({ ...demoProducts[0], ...change }).success,
       false,
     );
+});
+test("a product in a hidden category is refused at checkout, like an unavailable product", () => {
+  const hidden = demoProducts.map((p, i) =>
+    i === 0 ? { ...p, category: { ...demoCategories[0], is_visible: false } } : p,
+  );
+  const result = reviewOrder(checkoutSchema.parse(input), hidden);
+  assert.equal(result.url, null);
+  assert.equal(result.changes[0].available, false);
+  assert.equal(result.changes[0].message, "لم يعد المنتج متاحاً، يرجى حذفه للمتابعة.");
+});
+test("a product with no category is refused at checkout", () => {
+  const noCategory = demoProducts.map((p, i) => (i === 0 ? { ...p, category: null } : p));
+  const result = reviewOrder(checkoutSchema.parse(input), noCategory);
+  assert.equal(result.url, null);
+  assert.equal(result.changes[0].available, false);
+});
+test("a product in a visible category is still orderable", () => {
+  const result = reviewOrder(checkoutSchema.parse(input), demoProducts);
+  assert.equal(result.changes.length, 0);
+  assert.ok(result.url);
 });

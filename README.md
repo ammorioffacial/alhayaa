@@ -49,7 +49,7 @@ insert into public.admins(user_id) values ('UUID_OF_ADMIN');
 
 ## الشعار والمظهر
 
-الشعار الأصلي المرفق موجود في `public/logo.png` ويُعرض تلقائياً في الهيدر والتذييل والإدارة. بقي ملف المصدر `logo` دون تعديل. يمكن تغيير المسار باستخدام `NEXT_PUBLIC_LOGO_URL`. التصميم الجديد في `src/app/storefront.css`، والأنماط الأساسية في `src/app/globals.css`، والهوية في `src/components/brand.tsx`. خط Noto Sans Arabic مستضاف محلياً من حزمة Fontsource. صورة الواجهة في `public/images/care-editorial.png` ومواصفات توليدها في `public/images/ASSETS.md`. رسوم المنتجات تجريبية في `public/products` وتُستبدل بصور المنتجات الحقيقية من لوحة الإدارة.
+الشعار الأصلي المرفق موجود في `public/logo.png` ويُعرض تلقائياً في الهيدر والتذييل والإدارة. بقي ملف المصدر `logo` دون تعديل. يمكن تغيير المسار باستخدام `NEXT_PUBLIC_LOGO_URL`. التصميم الجديد في `src/app/storefront.css`، والأنماط الأساسية في `src/app/globals.css`، والهوية في `src/components/brand.tsx`. خط Zain مستضاف محلياً من حزمة Fontsource. صورة الواجهة في `public/images/care-editorial.png` ومواصفات توليدها في `public/images/ASSETS.md`. رسوم المنتجات تجريبية في `public/products` وتُستبدل بصور المنتجات الحقيقية من لوحة الإدارة.
 
 ## التحقق والاختبارات
 

@@ -1,13 +1,14 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import { Heart, Plus, ImageOff } from "lucide-react";
-import { useState } from "react";
-import { money, type Product } from "@/lib/catalog";
+import { Heart, Plus, Check, ImageOff } from "lucide-react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { formatPrice, type Product } from "@/lib/catalog";
+import { flyToCart } from "./fly-to-cart";
 
 export function Price({ value }: { value: number }) {
   return (
     <span className="sf-price">
-      <bdi>{money(value)}</bdi>
+      <bdi>{formatPrice(value)}</bdi>
     </span>
   );
 }
@@ -31,7 +32,7 @@ export function ProductImage({
         role="img"
         aria-label={`صورة ${alt} غير متاحة`}
       >
-        <ImageOff size={28} strokeWidth={1.5} aria-hidden="true" />
+        <ImageOff size={30} strokeWidth={1.5} aria-hidden="true" />
         <span>الصورة غير متاحة</span>
       </div>
     );
@@ -49,8 +50,24 @@ export function ProductImage({
   );
 }
 
+/** Press feedback: the label briefly reads "✓ أُضيف", then returns to normal. */
+export function useAddedFeedback() {
+  const [added, setAdded] = useState(false);
+  const [pulse, setPulse] = useState(0);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  function mark() {
+    clearTimeout(timer.current);
+    setAdded(true);
+    setPulse((n) => n + 1);
+    timer.current = setTimeout(() => setAdded(false), 1400);
+  }
+  return { added, pulse, mark };
+}
+
 export default function ProductCard({
   product: p,
+  index = 0,
   onInspect,
   onAdd,
   priority = false,
@@ -58,15 +75,18 @@ export default function ProductCard({
   onFavorite,
 }: {
   product: Product;
+  index?: number;
   onInspect: (p: Product) => void;
   onAdd: (p: Product) => void;
   priority?: boolean;
   favorite?: boolean;
   onFavorite?: (p: Product) => void;
 }) {
+  const feedback = useAddedFeedback();
   return (
     <article
       className={`sf-product product-card ${!p.available ? "is-unavailable" : ""}`}
+      style={{ "--i": Math.min(index, 8) } as CSSProperties}
     >
       <div className="sf-product-visual">
         <button
@@ -99,7 +119,7 @@ export default function ProductCard({
                 : `إضافة ${p.name} إلى المفضلة`
             }
           >
-            <Heart size={19} strokeWidth={1.6} aria-hidden="true" />
+            <Heart size={20} strokeWidth={1.7} aria-hidden="true" />
           </button>
         ) : null}
         {p.is_demo ? <span className="sf-demo-tag">نموذج تجريبي</span> : null}
@@ -116,17 +136,34 @@ export default function ProductCard({
         >
           {p.name}
         </button>
-        <span className="sf-product-category">{p.category}</span>
+        <span className="sf-product-category">{p.category?.name_ar ?? ""}</span>
         <Price value={p.price} />
         <button
           type="button"
-          className="sf-add"
+          className={`sf-add ${feedback.added ? "is-added" : ""}`}
           disabled={!p.available}
-          onClick={() => onAdd(p)}
+          onClick={(event) => {
+            flyToCart(event.currentTarget);
+            feedback.mark();
+            onAdd(p);
+          }}
           aria-label={`أضف ${p.name} للسلة`}
         >
-          <Plus size={17} strokeWidth={1.8} aria-hidden="true" />
-          {p.available ? "أضف للسلة" : "غير متوفر"}
+          <span key={feedback.pulse} className="sf-add-label">
+            {!p.available ? (
+              "غير متوفر"
+            ) : feedback.added ? (
+              <>
+                <Check size={18} strokeWidth={2.2} aria-hidden="true" />
+                أُضيف
+              </>
+            ) : (
+              <>
+                <Plus size={18} strokeWidth={2} aria-hidden="true" />
+                أضف للسلة
+              </>
+            )}
+          </span>
         </button>
       </div>
     </article>

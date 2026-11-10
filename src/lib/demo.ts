@@ -1,10 +1,55 @@
-import type { Product } from "./catalog";
+import type { Category, Product } from "./catalog";
+// Demo fixtures (DEMO_MODE only). Category names and marketing text here are fixture data.
+export const demoCategories: Category[] = [
+  {
+    id: "00000000-0000-4000-8000-0000000000c1",
+    name_ar: "العناية بالبشرة",
+    slug: "skin-care",
+    description_ar: "كل ما يحتاجه روتينكِ",
+    image_path: "/images/categories/skincare-care.webp",
+    accent: "#0f2b45",
+    sort_order: 1,
+    is_visible: true,
+  },
+  {
+    id: "00000000-0000-4000-8000-0000000000c2",
+    name_ar: "العناية بالشعر",
+    slug: "hair-care",
+    description_ar: "من الجذور إلى الأطراف",
+    image_path: "/images/categories/hair-and-body.webp",
+    accent: "#28578e",
+    sort_order: 2,
+    is_visible: true,
+  },
+  {
+    id: "00000000-0000-4000-8000-0000000000c3",
+    name_ar: "واقيات الشمس",
+    slug: "sun-care",
+    description_ar: "رفيقتكِ في كل يوم",
+    image_path: "/images/categories/sun-care.webp",
+    accent: "#c9a35a",
+    sort_order: 3,
+    is_visible: true,
+  },
+  {
+    id: "00000000-0000-4000-8000-0000000000c4",
+    name_ar: "مستحضرات التجميل",
+    slug: "cosmetics",
+    description_ar: "تفاصيل تعبّر عنكِ",
+    image_path: "/images/categories/beauty-polish.webp",
+    accent: "#b86c7b",
+    sort_order: 4,
+    is_visible: true,
+  },
+];
+const [skin, hair, sun, cosmetics] = demoCategories;
 export const demoProducts: Product[] = [
   {
     id: "00000000-0000-4000-8000-000000000001",
     name: "غسول الوجه المرطب",
     brand: "HAYAT CARE",
-    category: "العناية بالبشرة",
+    category_id: skin.id,
+    category: skin,
     description:
       "منتج توضيحي لعرض تجربة المتجر. استبدل هذه البيانات والوصف والصورة ببيانات المنتج الفعلي قبل البيع.",
     price: 24000,
@@ -17,7 +62,8 @@ export const demoProducts: Product[] = [
     id: "00000000-0000-4000-8000-000000000002",
     name: "سيروم العناية بالبشرة",
     brand: "DAILY RITUAL",
-    category: "العناية بالبشرة",
+    category_id: skin.id,
+    category: skin,
     description:
       "بيانات تجريبية وصورة توضيحية، وليست عرضاً تجارياً أو توصية علاجية.",
     price: 32000,
@@ -30,7 +76,8 @@ export const demoProducts: Product[] = [
     id: "00000000-0000-4000-8000-000000000003",
     name: "واقي الشمس اليومي",
     brand: "SUN ESSENTIALS",
-    category: "واقيات الشمس",
+    category_id: sun.id,
+    category: sun,
     description: "منتج تجريبي لاختبار تصفح الكتالوج وإضافة المنتجات إلى السلة.",
     price: 28000,
     image_url: "/products/sun.svg",
@@ -42,7 +89,8 @@ export const demoProducts: Product[] = [
     id: "00000000-0000-4000-8000-000000000004",
     name: "شامبو العناية بالشعر",
     brand: "BOTANICAL CARE",
-    category: "العناية بالشعر",
+    category_id: hair.id,
+    category: hair,
     description:
       "منتج توضيحي لتجربة المتجر. يرجى إضافة المواصفات الفعلية عند استبداله.",
     price: 22000,
@@ -55,7 +103,8 @@ export const demoProducts: Product[] = [
     id: "00000000-0000-4000-8000-000000000005",
     name: "كريم ترطيب الوجه",
     brand: "HAYAT CARE",
-    category: "العناية بالبشرة",
+    category_id: skin.id,
+    category: skin,
     description: "بيانات تجريبية لاختبار المتجر فقط.",
     price: 26000,
     image_url: "/products/cream.svg",
@@ -67,7 +116,8 @@ export const demoProducts: Product[] = [
     id: "00000000-0000-4000-8000-000000000006",
     name: "تينت الشفاه الوردي",
     brand: "SOFT BEAUTY",
-    category: "مستحضرات التجميل",
+    category_id: cosmetics.id,
+    category: cosmetics,
     description: "منتج تجريبي لاختبار حالة نفاد المخزون.",
     price: 18000,
     image_url: "/products/tint.svg",

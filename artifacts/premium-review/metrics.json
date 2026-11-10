@@ -1,0 +1,42 @@
+[
+  {
+    "width": 375,
+    "overflow": false,
+    "firstProductY": 648.96875,
+    "font": "\"IBM Plex Sans Arabic\", Tahoma, sans-serif",
+    "errors": [],
+    "consoleErrors": []
+  },
+  {
+    "width": 430,
+    "overflow": false,
+    "firstProductY": 648.96875,
+    "font": "\"IBM Plex Sans Arabic\", Tahoma, sans-serif",
+    "errors": [],
+    "consoleErrors": []
+  },
+  {
+    "width": 768,
+    "overflow": false,
+    "firstProductY": 1259.59375,
+    "font": "\"IBM Plex Sans Arabic\", Tahoma, sans-serif",
+    "errors": [],
+    "consoleErrors": []
+  },
+  {
+    "width": 1024,
+    "overflow": false,
+    "firstProductY": 1270.0625,
+    "font": "\"IBM Plex Sans Arabic\", Tahoma, sans-serif",
+    "errors": [],
+    "consoleErrors": []
+  },
+  {
+    "width": 1440,
+    "overflow": false,
+    "firstProductY": 1296.6875,
+    "font": "\"IBM Plex Sans Arabic\", Tahoma, sans-serif",
+    "errors": [],
+    "consoleErrors": []
+  }
+]

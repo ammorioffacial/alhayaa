@@ -1,0 +1,391 @@
+{
+  "width": 375,
+  "geometry": {
+    "card": {
+      "x": 16,
+      "y": 155,
+      "w": 343,
+      "h": 523.203125,
+      "position": "relative",
+      "overflow": "hidden",
+      "radius": "36px",
+      "backgroundImage": "none",
+      "backgroundColor": "rgb(15, 43, 69)"
+    },
+    "layers": {
+      "art": {
+        "position": "absolute",
+        "zIndex": "0",
+        "inset": "0px"
+      },
+      "shade": {
+        "zIndex": "1",
+        "backgroundImage": "none"
+      },
+      "copy": {
+        "position": "relative",
+        "zIndex": "2"
+      }
+    },
+    "video": {
+      "present": true,
+      "rect": {
+        "x": 16,
+        "y": 155,
+        "w": 343,
+        "h": 523.203125
+      },
+      "objectFit": "cover",
+      "opacity": "1",
+      "zIndex": "0",
+      "position": "absolute",
+      "src": "http://127.0.0.1:3001/videos/hero-1.webm"
+    },
+    "texts": [
+      {
+        "sel": ".sf-kicker",
+        "x": 63.203125,
+        "y": 177,
+        "w": 277.796875,
+        "h": 45.1875,
+        "color": "rgb(241, 227, 194)",
+        "bg": "rgba(15, 43, 69, 0.62)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      },
+      {
+        "sel": ".sf-campaign h1",
+        "x": 34,
+        "y": 238.1875,
+        "w": 307,
+        "h": 101.1875,
+        "color": "rgb(255, 255, 255)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "fontSize": "44px",
+        "fontWeight": "700"
+      },
+      {
+        "sel": ".sf-campaign-copy > p",
+        "x": 34,
+        "y": 355.375,
+        "w": 307,
+        "h": 86.671875,
+        "color": "rgba(255, 255, 255, 0.86)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "fontSize": "17px",
+        "fontWeight": "400"
+      },
+      {
+        "sel": ".sf-hero-actions .sf-primary",
+        "x": 128.875,
+        "y": 462.046875,
+        "w": 212.125,
+        "h": 54.890625,
+        "color": "rgb(15, 43, 69)",
+        "bg": "rgb(201, 163, 90)",
+        "fontSize": "17px",
+        "fontWeight": "500"
+      },
+      {
+        "sel": ".sf-hero-actions .sf-ghost",
+        "x": 137.5,
+        "y": 528.9375,
+        "w": 203.5,
+        "h": 54.890625,
+        "color": "rgb(255, 255, 255)",
+        "bg": "rgba(255, 255, 255, 0.1)",
+        "fontSize": "17px",
+        "fontWeight": "500"
+      },
+      {
+        "sel": ".sf-hero-foot",
+        "x": 34,
+        "y": 599.828125,
+        "w": 307,
+        "h": 54.375,
+        "color": "rgba(255, 255, 255, 0.78)",
+        "bg": "rgba(0, 0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    ]
+  },
+  "clipsMeasured": [
+    "http://127.0.0.1:3001/videos/hero-1.webm",
+    "http://127.0.0.1:3001/videos/hero-2.webm",
+    "http://127.0.0.1:3001/videos/hero-3.webm"
+  ],
+  "runs": [
+    {
+      "clip": "http://127.0.0.1:3001/videos/hero-1.webm",
+      "corners": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "texts": [
+        {
+          "sel": ".sf-kicker",
+          "fontSize": 16,
+          "fontWeight": 500,
+          "minContrast": 8.29,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            40,
+            65,
+            89
+          ]
+        },
+        {
+          "sel": ".sf-campaign h1",
+          "fontSize": 44,
+          "fontWeight": 700,
+          "minContrast": 6.18,
+          "requiredAA": 3,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            80,
+            99,
+            120
+          ]
+        },
+        {
+          "sel": ".sf-campaign-copy > p",
+          "fontSize": 17,
+          "fontWeight": 400,
+          "minContrast": 4.91,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            81,
+            102,
+            121
+          ]
+        },
+        {
+          "sel": ".sf-hero-actions .sf-primary",
+          "fontSize": 17,
+          "fontWeight": 500,
+          "minContrast": 6.11,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            201,
+            163,
+            90
+          ]
+        },
+        {
+          "sel": ".sf-hero-actions .sf-ghost",
+          "fontSize": 17,
+          "fontWeight": 500,
+          "minContrast": 5.65,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            85,
+            106,
+            124
+          ]
+        },
+        {
+          "sel": ".sf-hero-foot",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "minContrast": 5.02,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            72,
+            91,
+            111
+          ]
+        }
+      ]
+    },
+    {
+      "clip": "http://127.0.0.1:3001/videos/hero-2.webm",
+      "corners": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "texts": [
+        {
+          "sel": ".sf-kicker",
+          "fontSize": 16,
+          "fontWeight": 500,
+          "minContrast": 8.45,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            39,
+            64,
+            87
+          ]
+        },
+        {
+          "sel": ".sf-campaign h1",
+          "fontSize": 44,
+          "fontWeight": 700,
+          "minContrast": 6.24,
+          "requiredAA": 3,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            78,
+            99,
+            117
+          ]
+        },
+        {
+          "sel": ".sf-campaign-copy > p",
+          "fontSize": 17,
+          "fontWeight": 400,
+          "minContrast": 5.12,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            79,
+            99,
+            116
+          ]
+        },
+        {
+          "sel": ".sf-hero-actions .sf-primary",
+          "fontSize": 17,
+          "fontWeight": 500,
+          "minContrast": 6.11,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            201,
+            163,
+            90
+          ]
+        },
+        {
+          "sel": ".sf-hero-actions .sf-ghost",
+          "fontSize": 17,
+          "fontWeight": 500,
+          "minContrast": 5.2,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            92,
+            111,
+            127
+          ]
+        },
+        {
+          "sel": ".sf-hero-foot",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "minContrast": 4.97,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            72,
+            92,
+            111
+          ]
+        }
+      ]
+    },
+    {
+      "clip": "http://127.0.0.1:3001/videos/hero-3.webm",
+      "corners": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "texts": [
+        {
+          "sel": ".sf-kicker",
+          "fontSize": 16,
+          "fontWeight": 500,
+          "minContrast": 9.01,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            32,
+            60,
+            85
+          ]
+        },
+        {
+          "sel": ".sf-campaign h1",
+          "fontSize": 44,
+          "fontWeight": 700,
+          "minContrast": 7.45,
+          "requiredAA": 3,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            60,
+            88,
+            111
+          ]
+        },
+        {
+          "sel": ".sf-campaign-copy > p",
+          "fontSize": 17,
+          "fontWeight": 400,
+          "minContrast": 5.28,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            79,
+            96,
+            116
+          ]
+        },
+        {
+          "sel": ".sf-hero-actions .sf-primary",
+          "fontSize": 17,
+          "fontWeight": 500,
+          "minContrast": 6.11,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            201,
+            163,
+            90
+          ]
+        },
+        {
+          "sel": ".sf-hero-actions .sf-ghost",
+          "fontSize": 17,
+          "fontWeight": 500,
+          "minContrast": 5.26,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            91,
+            110,
+            128
+          ]
+        },
+        {
+          "sel": ".sf-hero-foot",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "minContrast": 4.83,
+          "requiredAA": 4.5,
+          "passesAA": true,
+          "worstBackgroundRGB": [
+            75,
+            94,
+            114
+          ]
+        }
+      ]
+    }
+  ],
+  "worstContrast": 4.83,
+  "allTextPassesAA": true,
+  "maxCornerDelta": 0,
+  "pageErrors": []
+}

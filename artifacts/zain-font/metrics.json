@@ -1,0 +1,105 @@
+{
+  "base": "http://127.0.0.1:3001",
+  "widths": [
+    {
+      "width": 375,
+      "fontCheck": {
+        "bodyFont": "Zain, system-ui, sans-serif",
+        "h1Font": "Zain, system-ui, sans-serif",
+        "loadedZain": [
+          "Zain 400 normal",
+          "Zain 400 normal",
+          "Zain 700 normal",
+          "Zain 700 normal"
+        ],
+        "zainAvailable": true
+      },
+      "horizontalScroll": {
+        "storefront": false,
+        "login": false,
+        "dashboard": false
+      },
+      "externalRequests": [
+        "https://iyppfltnvojaqnwmnfee.supabase.co/storage/v1/object/public/product-images/5cd76963-84e5-4059-97b3-664bf8a9d828.png",
+        "http://127.0.0.1:3000/dash-preview",
+        "http://127.0.0.1:3000/_next/static/chunks/_0sis9mx5ooj5m._.css",
+        "http://127.0.0.1:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0fb9-gqu7_t97._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js",
+        "http://127.0.0.1:3000/_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_client_1165-soo5tfpf._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/_1anvha4rlo79g._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/turbopack-_11q0wbt2n0d9y._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/_15oyd7kht7ddq._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_20wefz_f1k6jn._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/_0bemmg1xejskx._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_zod_v4_classic_1usyglxhcw7hz._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_zod_v4_core_14qn2mg1f8pkp._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_zod_v4_locales_1-ided7izgr--._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_1qnu-dknryah-._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/src_0qu63p2aerk1y._.js",
+        "http://127.0.0.1:3000/_next/static/media/zain-arabic-700-normal.3ciuxffea1c_x.woff2",
+        "http://127.0.0.1:3000/_next/static/media/zain-arabic-400-normal.1won4zzbc0lfh.woff2",
+        "http://127.0.0.1:3000/_next/static/media/zain-latin-700-normal.1-cfl8afdxxl2.woff2",
+        "http://127.0.0.1:3000/_next/static/media/zain-latin-400-normal.2_k7xj6ffzv7c.woff2",
+        "http://127.0.0.1:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js"
+      ],
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "fontCheck": {
+        "bodyFont": "Zain, system-ui, sans-serif",
+        "h1Font": "Zain, system-ui, sans-serif",
+        "loadedZain": [
+          "Zain 400 normal",
+          "Zain 400 normal",
+          "Zain 700 normal",
+          "Zain 700 normal"
+        ],
+        "zainAvailable": true
+      },
+      "horizontalScroll": {
+        "storefront": false,
+        "login": false,
+        "dashboard": false
+      },
+      "externalRequests": [
+        "https://iyppfltnvojaqnwmnfee.supabase.co/storage/v1/object/public/product-images/5cd76963-84e5-4059-97b3-664bf8a9d828.png",
+        "http://127.0.0.1:3000/dash-preview",
+        "http://127.0.0.1:3000/_next/static/chunks/_0sis9mx5ooj5m._.css",
+        "http://127.0.0.1:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0fb9-gqu7_t97._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/1daa_next_dist_compiled_react-dom_cjs_react-dom-client_development_0mp0cp_t-ezj9.js",
+        "http://127.0.0.1:3000/_next/static/chunks/1q96_modules_next_dist_compiled_react-dom_cjs_react-dom_development_1sqry0_53krp4.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_0grqycjrj6mju._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-67asdr9._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jmam7qwg.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_1amofcmz--cdp._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_client_1165-soo5tfpf._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqwj2323d._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/_1anvha4rlo79g._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/turbopack-_11q0wbt2n0d9y._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/_15oyd7kht7ddq._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_20wefz_f1k6jn._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/_0bemmg1xejskx._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_zod_v4_classic_1usyglxhcw7hz._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_zod_v4_core_14qn2mg1f8pkp._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_zod_v4_locales_1-ided7izgr--._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/node_modules_1qnu-dknryah-._.js",
+        "http://127.0.0.1:3000/_next/static/chunks/src_0qu63p2aerk1y._.js",
+        "http://127.0.0.1:3000/_next/static/media/zain-arabic-700-normal.3ciuxffea1c_x.woff2",
+        "http://127.0.0.1:3000/_next/static/media/zain-arabic-400-normal.1won4zzbc0lfh.woff2",
+        "http://127.0.0.1:3000/_next/static/media/zain-latin-700-normal.1-cfl8afdxxl2.woff2",
+        "http://127.0.0.1:3000/_next/static/media/zain-latin-400-normal.2_k7xj6ffzv7c.woff2",
+        "http://127.0.0.1:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1mojsayzyj2p6._.js"
+      ],
+      "errors": []
+    }
+  ]
+}

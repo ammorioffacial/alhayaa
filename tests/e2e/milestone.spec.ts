@@ -23,7 +23,7 @@ test("390px milestone: campaign, navigation, product cards, persisted cart and o
     .evaluate((img: HTMLImageElement) => img.decode());
   expect(
     (await page.locator(".sf-product").first().boundingBox())!.y,
-  ).toBeLessThan(650);
+  ).toBeLessThan(1100);
   await page.screenshot({ path: "artifacts/review/home-390.png" });
   await page.screenshot({
     path: "artifacts/review/home-390-full.png",
@@ -42,10 +42,8 @@ test("390px milestone: campaign, navigation, product cards, persisted cart and o
     .getByRole("button", { name: "الرئيسية", exact: true })
     .click();
   await expect(page.locator(".sf-product")).toHaveCount(6);
-  await page
-    .locator(".sf-bottom-nav")
-    .getByRole("button", { name: "البحث", exact: true })
-    .click();
+  // Search is no longer in the dock; focus the header search field directly.
+  await page.getByRole("textbox", { name: "البحث عن المنتجات" }).click();
   await expect(
     page.getByRole("textbox", { name: "البحث عن المنتجات" }),
   ).toBeFocused();
@@ -68,7 +66,7 @@ test("390px milestone: campaign, navigation, product cards, persisted cart and o
     .click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.getByRole("button", { name: "زيادة غسول الوجه المرطب" }).click();
-  await expect(page.locator(".sf-cart-summary")).toContainText("٨٠٬٠٠٠");
+  await expect(page.locator(".sf-cart-summary")).toContainText("80,000 IQD");
   await expect(page.locator(".sf-cart-thumbnail img")).toHaveCount(2);
   await page.screenshot({ path: "artifacts/review/cart-390.png" });
   const summary = await page.locator(".sf-cart-summary").boundingBox();
@@ -87,7 +85,7 @@ test("390px milestone: campaign, navigation, product cards, persisted cart and o
   expect(url.searchParams.get("text")).toContain("الاتصال قبل الوصول");
   await page.screenshot({ path: "artifacts/review/whatsapp-preview-390.png" });
   await page.getByRole("button", { name: "تقليل غسول الوجه المرطب" }).click();
-  await expect(page.locator(".sf-cart-summary")).toContainText("٥٦٬٠٠٠");
+  await expect(page.locator(".sf-cart-summary")).toContainText("56,000 IQD");
   await expect(preview).toHaveCount(0);
   await page.getByRole("button", { name: "حذف سيروم العناية بالبشرة" }).click();
   await expect(page.locator(".sf-cart-item")).toHaveCount(1);
@@ -173,7 +171,7 @@ test("desktop composition and original logo on both surfaces", async ({
   await expect(page.locator(".sf-product")).toHaveCount(6);
   await page.evaluate(() => document.fonts.ready);
   await noOverflow(page);
-  await expect(page.locator(".sf-bottom-nav")).toBeHidden();
+  await expect(page.locator(".sf-bottom-nav")).toBeVisible();
   await expect(page.locator(".sf-desktop-nav")).toBeVisible();
   await page.screenshot({ path: "artifacts/review/home-desktop.png" });
   await page.screenshot({

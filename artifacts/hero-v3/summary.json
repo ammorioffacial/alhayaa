@@ -1,0 +1,26 @@
+[
+  {
+    "width": 1440,
+    "worstContrast": 4.99,
+    "allTextPassesAA": true,
+    "maxCornerDelta": 0,
+    "pageErrors": [],
+    "clipsMeasured": [
+      "http://127.0.0.1:3001/videos/hero-1.webm",
+      "http://127.0.0.1:3001/videos/hero-2.webm",
+      "http://127.0.0.1:3001/videos/hero-3.webm"
+    ]
+  },
+  {
+    "width": 375,
+    "worstContrast": 4.83,
+    "allTextPassesAA": true,
+    "maxCornerDelta": 0,
+    "pageErrors": [],
+    "clipsMeasured": [
+      "http://127.0.0.1:3001/videos/hero-1.webm",
+      "http://127.0.0.1:3001/videos/hero-2.webm",
+      "http://127.0.0.1:3001/videos/hero-3.webm"
+    ]
+  }
+]

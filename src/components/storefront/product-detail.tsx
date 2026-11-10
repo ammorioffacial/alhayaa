@@ -1,9 +1,17 @@
 "use client";
 
-import { ArrowUpLeft, Heart, Minus, Plus, ShoppingBag } from "lucide-react";
+import {
+  ArrowUpLeft,
+  Check,
+  Heart,
+  Minus,
+  Plus,
+  ShoppingBag,
+} from "lucide-react";
 import { useId, useState } from "react";
 import type { Product } from "@/lib/catalog";
-import { Price, ProductImage } from "./product-card";
+import { Price, ProductImage, useAddedFeedback } from "./product-card";
+import { flyToCart } from "./fly-to-cart";
 
 export default function ProductDetail({
   product,
@@ -22,8 +30,9 @@ export default function ProductDetail({
 }) {
   const quantityId = useId();
   const [quantity, setQuantity] = useState(1);
+  const feedback = useAddedFeedback();
   const related = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
+    .filter((p) => p.category !== null && p.category.id === product.category?.id && p.id !== product.id)
     .slice(0, 2);
 
   return (
@@ -36,7 +45,7 @@ export default function ProductDetail({
           ) : null}
         </div>
         <div className="sf-detail-content">
-          <div className="sf-detail-category">{product.category}</div>
+          <div className="sf-detail-category">{product.category?.name_ar ?? ""}</div>
           <bdi className="sf-detail-brand" dir="auto">
             {product.brand}
           </bdi>
@@ -104,12 +113,33 @@ export default function ProductDetail({
             <div className="sf-detail-actions">
               <button
                 type="button"
-                className="sf-detail-add"
+                className={`sf-detail-add ${feedback.added ? "is-added" : ""}`}
                 disabled={!product.available}
-                onClick={() => onAdd(product, quantity)}
+                onClick={(event) => {
+                  flyToCart(event.currentTarget);
+                  feedback.mark();
+                  onAdd(product, quantity);
+                }}
               >
-                <ShoppingBag size={19} strokeWidth={1.7} aria-hidden="true" />
-                {product.available ? "أضف إلى السلة" : "غير متوفر حالياً"}
+                <span key={feedback.pulse} className="sf-add-label">
+                  {!product.available ? (
+                    "غير متوفر حالياً"
+                  ) : feedback.added ? (
+                    <>
+                      <Check size={19} strokeWidth={2.2} aria-hidden="true" />
+                      أُضيف
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag
+                        size={19}
+                        strokeWidth={1.7}
+                        aria-hidden="true"
+                      />
+                      أضف إلى السلة
+                    </>
+                  )}
+                </span>
               </button>
               <button
                 type="button"

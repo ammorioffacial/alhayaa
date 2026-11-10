@@ -1,0 +1,7 @@
+# Allowed matches for the hardcoded-category check (scripts/check-hardcoded-categories.mjs).
+# Format: <path> :: <exact text that must appear on the matching line>
+# Use '*' as the text to allow every match in that file (fixtures only).
+# Owner decision: demo fixture names and marketing copy may contain category words.
+src/lib/demo.ts :: *
+src/app/layout.tsx :: للعناية بالبشرة والشعر والتجميل
+src/components/storefront/home.tsx :: اكتشفي العناية بالبشرة

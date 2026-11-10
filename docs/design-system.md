@@ -27,21 +27,20 @@ Storefront `--sf-*` aliases reference these brand tokens. Muted peach, sage and 
 
 ## Arabic typography
 
-IBM Plex Sans Arabic is self-hosted through Fontsource at 400, 500, 600 and 700. Its compact proportions, distinct Arabic letterforms and calm medium weights fit both editorial headings and dense shopping controls. It replaces the previous Noto Sans Arabic setup. Alexandria would create a more geometric, heavier interface; Cairo and Tajawal remain valid alternatives, but do not mix families within this system.
+Zain is the only typeface. It is self-hosted through Fontsource (`@fontsource/zain`) at 400, 700 and 800, and set once through the `--font-arabic` token on `:root`. Requested weights 500 and 600 map to 400 and 700. No weight above 800 and no negative letter-spacing. Do not mix in another family.
 
-| Role                               | Desktop                        | Mobile                            |
-| ---------------------------------- | ------------------------------ | --------------------------------- |
-| Hero                               | 42–60 px / 1.28, weight 600    | 29–30 px / 1.25, weight 600       |
-| Section title                      | 24–28 px / 1.5, weight 500–600 | 20–22 px / 1.5                    |
-| Product title                      | 15 px / 1.6, weight 600        | 14 px / 1.6                       |
-| Product price                      | 18 px / 1.5, weight 600        | 17 px / 1.5                       |
-| Detail title                       | 26 px / 1.5                    | 23 px / 1.5                       |
-| Body / descriptions                | 14–17 px / 1.75–1.9            | 12–14 px / 1.7–1.9                |
-| Inputs                             | 16 px                          | 16 px to avoid focus zoom         |
-| Product metadata                   | 12 px                          | 12 px                             |
-| Compact navigation/category labels | 12–15 px                       | 10–11 px with generous touch area |
+| Role | Desktop | Mobile |
+| --- | --- | --- |
+| Hero title | 44–56 px, line-height 1.25, weight 700 | 36–42 px, line-height 1.25, weight 700 |
+| Section title | 28–34 px, line-height 1.25, weight 600 | 24 px, weight 600 |
+| Card title | 17 px, weight 600 | 17 px, weight 600 |
+| Price | 16 px, weight 600 | 16 px, weight 600 |
+| Body | 16 px, line-height 1.7 | 15 px, line-height 1.7 |
+| Floor | 14 px for the smallest label (sub-brand). Nothing is set below 14 px. | |
 
-Do not letter-space Arabic. Use `<bdi>` for brand names, phone numbers and currency; `dir="auto"` handles mixed product names and descriptions. Prices use the existing `money()` formatter with `Intl.NumberFormat('ar-IQ')` and tabular numerals.
+Numbers use Western digits (0–9) everywhere: `Intl.NumberFormat("en-US")`, counts, prices, the cart badge, and the trust strip. Prices read "24,000 IQD" through `formatPrice()` in `src/lib/catalog.ts`. Product counts use `productCount()` in `src/lib/arabic-plural.ts`, which applies Arabic agreement (0, 1, 2, 3–10, 11+). The WhatsApp message keeps its original `money()` format (Arabic-Indic digits and "د.ع") because it is an outbound message, not part of the page.
+
+Do not letter-space Arabic. Use `<bdi>` for brand names, phone numbers and currency; `dir="auto"` handles mixed product names and descriptions.
 
 ## Spacing, surfaces and layout
 

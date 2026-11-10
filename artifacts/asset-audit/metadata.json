@@ -1,0 +1,364 @@
+[
+  {
+    "path": "References/18509243792bc5933e082829d770639b.jpg",
+    "width": 1000,
+    "height": 750,
+    "mode": "RGB",
+    "bytes": 56408,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1000,
+      750
+    ]
+  },
+  {
+    "path": "References/26805bd941b9044f78c666812c6d24a4.jpg",
+    "width": 1080,
+    "height": 752,
+    "mode": "RGB",
+    "bytes": 58918,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1080,
+      752
+    ]
+  },
+  {
+    "path": "References/51af89e627a822d1c270bc372e41b389.jpg",
+    "width": 1080,
+    "height": 1443,
+    "mode": "RGB",
+    "bytes": 112118,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1080,
+      1443
+    ]
+  },
+  {
+    "path": "References/56a891cee66fe7eff55585591943ae33.jpg",
+    "width": 1200,
+    "height": 900,
+    "mode": "RGB",
+    "bytes": 107451,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1200,
+      900
+    ]
+  },
+  {
+    "path": "References/66d82d6347618326fe92ee82a05c5dd5.jpg",
+    "width": 1200,
+    "height": 900,
+    "mode": "RGB",
+    "bytes": 95942,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1200,
+      900
+    ]
+  },
+  {
+    "path": "References/71a5332e7b7c9772175e3075a9bab63b.jpg",
+    "width": 1000,
+    "height": 750,
+    "mode": "RGB",
+    "bytes": 59657,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1000,
+      750
+    ]
+  },
+  {
+    "path": "References/7a4880b93cbdd5f7217e8d6ddc54b58c.jpg",
+    "width": 1200,
+    "height": 900,
+    "mode": "RGB",
+    "bytes": 123656,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1200,
+      900
+    ]
+  },
+  {
+    "path": "References/c6655253c4168212bbe2c1533f0b22c6.jpg",
+    "width": 1000,
+    "height": 750,
+    "mode": "RGB",
+    "bytes": 62005,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1000,
+      750
+    ]
+  },
+  {
+    "path": "References/e62ce2979280c0fff3f47f02cd0cc115.jpg",
+    "width": 1200,
+    "height": 800,
+    "mode": "RGB",
+    "bytes": 121862,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1200,
+      800
+    ]
+  },
+  {
+    "path": "References/e7a7cc442eede74aaca85ceb0410c619.jpg",
+    "width": 1200,
+    "height": 1734,
+    "mode": "RGB",
+    "bytes": 165791,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1200,
+      1734
+    ]
+  },
+  {
+    "path": "icon/133858.jpg",
+    "width": 1500,
+    "height": 1500,
+    "mode": "RGB",
+    "bytes": 434087,
+    "alpha_extrema": [
+      255,
+      255
+    ],
+    "visible_bounds": [
+      0,
+      0,
+      1500,
+      1500
+    ]
+  },
+  {
+    "path": "icon/bathroom-essentials-3d-cartoon-style.png",
+    "width": 1706,
+    "height": 2000,
+    "mode": "RGBA",
+    "bytes": 1204118,
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "visible_bounds": [
+      108,
+      171,
+      1602,
+      1687
+    ]
+  },
+  {
+    "path": "icon/beauty-make-up-3d-icon (1).png",
+    "width": 626,
+    "height": 626,
+    "mode": "RGBA",
+    "bytes": 124290,
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "visible_bounds": [
+      72,
+      53,
+      577,
+      574
+    ]
+  },
+  {
+    "path": "icon/beauty-make-up-3d-icon (2).png",
+    "width": 2000,
+    "height": 2000,
+    "mode": "RGBA",
+    "bytes": 894496,
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "visible_bounds": [
+      220,
+      186,
+      1820,
+      1882
+    ]
+  },
+  {
+    "path": "icon/beauty-make-up-3d-icon (3).png",
+    "width": 2000,
+    "height": 2000,
+    "mode": "RGBA",
+    "bytes": 724024,
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "visible_bounds": [
+      231,
+      156,
+      1826,
+      1871
+    ]
+  },
+  {
+    "path": "icon/beauty-make-up-3d-icon (4).png",
+    "width": 2000,
+    "height": 2000,
+    "mode": "RGBA",
+    "bytes": 485665,
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "visible_bounds": [
+      223,
+      296,
+      1828,
+      1680
+    ]
+  },
+  {
+    "path": "icon/beauty-make-up-3d-icon (5).png",
+    "width": 2000,
+    "height": 2000,
+    "mode": "RGBA",
+    "bytes": 913388,
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "visible_bounds": [
+      368,
+      384,
+      1682,
+      1878
+    ]
+  },
+  {
+    "path": "icon/beauty-make-up-3d-icon.png",
+    "width": 2000,
+    "height": 2000,
+    "mode": "RGBA",
+    "bytes": 609310,
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "visible_bounds": [
+      279,
+      211,
+      1765,
+      1858
+    ]
+  },
+  {
+    "path": "icon/cosmetic-bag-3d-icon-illustration.png",
+    "width": 2000,
+    "height": 2000,
+    "mode": "RGBA",
+    "bytes": 903858,
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "visible_bounds": [
+      191,
+      383,
+      2000,
+      2000
+    ]
+  },
+  {
+    "path": "icon/stylized-beauty-bag-containing-diverse-skincare-products.png",
+    "width": 2000,
+    "height": 2000,
+    "mode": "RGBA",
+    "bytes": 1428881,
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "visible_bounds": [
+      250,
+      125,
+      1752,
+      1776
+    ]
+  },
+  {
+    "path": "public/images/care-editorial.png",
+    "width": 1536,
+    "height": 1024,
+    "mode": "RGB",
+    "bytes": 2405087,
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "public/logo.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "bytes": 398484,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  }
+]

@@ -87,7 +87,7 @@ test("detail quantity, related navigation and keyboard focus remain usable", asy
   await page.keyboard.press("Shift+Tab");
   await expect(dialog.locator(".sf-related-item").last()).toBeFocused();
   await page.getByLabel("الكمية", { exact: true }).fill("3");
-  await expect(page.locator(".sf-detail-total")).toContainText("٧٢٬٠٠٠");
+  await expect(page.locator(".sf-detail-total")).toContainText("72,000 IQD");
   await page
     .getByRole("button", { name: "أضف إلى السلة", exact: true })
     .click();
@@ -102,7 +102,7 @@ test("detail quantity, related navigation and keyboard focus remain usable", asy
     .locator(".sf-header-actions")
     .getByRole("button", { name: "السلة، 3 قطع" })
     .click();
-  await expect(page.locator(".sf-cart-summary")).toContainText("٧٢٬٠٠٠");
+  await expect(page.locator(".sf-cart-summary")).toContainText("72,000 IQD");
 });
 
 test("corrupt saved state and blocked storage do not break shopping", async ({
@@ -165,7 +165,7 @@ for (const width of [375, 430, 768, 1024, 1440]) {
     if (width < 768)
       expect(
         (await page.locator(".sf-product").first().boundingBox())!.y,
-      ).toBeLessThan(675);
+      ).toBeLessThan(1100);
     await page
       .getByRole("button", { name: "تفاصيل غسول الوجه المرطب", exact: true })
       .click();

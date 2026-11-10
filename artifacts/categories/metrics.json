@@ -1,0 +1,90 @@
+{
+  "widths": [
+    {
+      "width": 375,
+      "adminCategories": {
+        "rows": 5,
+        "horizontalScroll": false
+      },
+      "productForm": {
+        "newProductOptions": [
+          "العناية بالبشرة",
+          "العناية بالشعر",
+          "واقيات الشمس",
+          "مستحضرات التجميل"
+        ],
+        "editHiddenProductOptions": [
+          "العناية بالبشرة",
+          "العناية بالشعر",
+          "واقيات الشمس",
+          "مستحضرات التجميل",
+          "تصنيف مخفي (مخفي)"
+        ],
+        "horizontalScroll": false
+      },
+      "storefront": {
+        "shortcutNames": [
+          "العناية بالبشرة",
+          "العناية بالشعر",
+          "واقيات الشمس",
+          "مستحضرات التجميل"
+        ],
+        "badges": 1,
+        "images": 3,
+        "counts": [
+          "3 منتجات ",
+          "منتج واحد ",
+          "منتج واحد ",
+          "منتج واحد "
+        ],
+        "productCards": 6,
+        "hiddenProductVisible": 0,
+        "horizontalScroll": false
+      },
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "adminCategories": {
+        "rows": 5,
+        "horizontalScroll": false
+      },
+      "productForm": {
+        "newProductOptions": [
+          "العناية بالبشرة",
+          "العناية بالشعر",
+          "واقيات الشمس",
+          "مستحضرات التجميل"
+        ],
+        "editHiddenProductOptions": [
+          "العناية بالبشرة",
+          "العناية بالشعر",
+          "واقيات الشمس",
+          "مستحضرات التجميل",
+          "تصنيف مخفي (مخفي)"
+        ],
+        "horizontalScroll": false
+      },
+      "storefront": {
+        "shortcutNames": [
+          "العناية بالبشرة",
+          "العناية بالشعر",
+          "واقيات الشمس",
+          "مستحضرات التجميل"
+        ],
+        "badges": 1,
+        "images": 3,
+        "counts": [
+          "3 منتجات ",
+          "منتج واحد ",
+          "منتج واحد ",
+          "منتج واحد "
+        ],
+        "productCards": 6,
+        "hiddenProductVisible": 0,
+        "horizontalScroll": false
+      },
+      "errors": []
+    }
+  ]
+}
