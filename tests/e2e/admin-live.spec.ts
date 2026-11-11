@@ -80,6 +80,7 @@ test("live Supabase admin CRUD, image upload, authoritative checkout and logout"
     await page.getByLabel("الاسم الكامل").fill("اختبار آلي");
     await page.getByLabel("رقم الهاتف").fill("07711191871");
     await page.getByLabel("عنوان التوصيل").fill("عنوان اختبار غير حقيقي");
+    await page.getByLabel("المحافظة", { exact: true }).selectOption("baghdad");
     await page.route("https://wa.me/**", (route) => route.abort());
     const navigation = page.waitForRequest((r) =>
       r.url().startsWith("https://wa.me/"),

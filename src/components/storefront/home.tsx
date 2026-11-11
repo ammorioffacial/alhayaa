@@ -400,7 +400,7 @@ export default function Store({
               <Truck aria-hidden="true" size={24} />
               <span>
                 توصيل داخل بغداد
-                <small>التفاصيل والرسوم تُؤكّد عبر واتساب</small>
+                <small>رسوم التوصيل حسب المحافظة</small>
               </span>
             </span>
           </div>

@@ -40,6 +40,7 @@ test("mobile catalog, search, details, cart persistence and WhatsApp preview", a
   await page.getByLabel("الاسم الكامل").fill("زبون تجريبي");
   await page.getByLabel("رقم الهاتف").fill("07711191871");
   await page.getByLabel("عنوان التوصيل").fill("بغداد، حي الجامعة، شارع ٦٦");
+  await page.getByLabel("المحافظة", { exact: true }).selectOption("baghdad");
   await page.getByLabel("ملاحظات (اختياري)").fill("الاتصال قبل الوصول");
   await page.getByRole("button", { name: "أرسل الطلب على واتساب" }).click();
   await expect(page.locator(".message-preview")).toContainText("× 2");

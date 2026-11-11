@@ -7,6 +7,7 @@ const input = {
     name: "زبون تجريبي",
     phone: "07711191871",
     address: "بغداد، حي الجامعة، شارع ٦٦",
+    governorate: "baghdad" as const,
     notes: "الاتصال قبل الوصول",
   },
   items: [{ id: demoProducts[0].id, quantity: 2, price: 24000 }],
@@ -88,4 +89,37 @@ test("a product in a visible category is still orderable", () => {
   const result = reviewOrder(checkoutSchema.parse(input), demoProducts);
   assert.equal(result.changes.length, 0);
   assert.ok(result.url);
+});
+
+test("Baghdad adds 5,000 IQD delivery to the total in the message", () => {
+  const result = reviewOrder(checkoutSchema.parse(input), demoProducts);
+  const message = new URL(result.url!).searchParams.get("text")!;
+  assert.match(message, /المحافظة: بغداد/);
+  assert.match(message, /رسوم التوصيل: ٥٬٠٠٠ د\.ع/);
+  assert.match(message, /الإجمالي: ٥٣٬٠٠٠ د\.ع/);
+});
+
+test("any other governorate adds 6,000 IQD delivery to the total", () => {
+  const basra = { ...input, customer: { ...input.customer, governorate: "basra" as const } };
+  const result = reviewOrder(checkoutSchema.parse(basra), demoProducts);
+  const message = new URL(result.url!).searchParams.get("text")!;
+  assert.match(message, /المحافظة: البصرة/);
+  assert.match(message, /رسوم التوصيل: ٦٬٠٠٠ د\.ع/);
+  assert.match(message, /الإجمالي: ٥٤٬٠٠٠ د\.ع/);
+});
+
+test("checkout requires a governorate from the list", () => {
+  for (const governorate of ["", "unknown"]) {
+    const parsed = checkoutSchema.safeParse({ ...input, customer: { ...input.customer, governorate } });
+    assert.equal(parsed.success, false);
+  }
+  const missing = checkoutSchema.safeParse({ ...input, customer: { ...input.customer, governorate: undefined } });
+  assert.equal(missing.success, false);
+  assert.equal(missing.error?.issues[0].message, "اختر المحافظة");
+});
+
+test("the WhatsApp message no longer tells the customer that delivery is confirmed over WhatsApp", () => {
+  const result = reviewOrder(checkoutSchema.parse(input), demoProducts);
+  const message = new URL(result.url!).searchParams.get("text")!;
+  assert.doesNotMatch(message, /عبر واتساب/);
 });

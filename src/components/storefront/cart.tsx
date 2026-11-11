@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ShoppingBag,
   Plus,
@@ -7,9 +7,13 @@ import {
   Trash2,
   MessageCircle,
   MapPin,
-  ShieldCheck,
 } from "lucide-react";
 import { type Product } from "@/lib/catalog";
+import {
+  GOVERNORATE_NAMES,
+  deliveryFee,
+  type GovernorateId,
+} from "@/lib/delivery";
 import type { useShopping } from "./use-shopping";
 import { Price, ProductImage } from "./product-card";
 import Dialog from "./dialog";
@@ -27,6 +31,8 @@ export default function Cart({
   returnFocus?: HTMLElement | null;
 }) {
   const feedbackRef = useRef<HTMLDivElement>(null);
+  const [governorate, setGovernorate] = useState<GovernorateId | "">("");
+  const fee = governorate ? deliveryFee(governorate) : null;
   useEffect(() => {
     if (shop.preview) feedbackRef.current?.scrollIntoView({ block: "nearest" });
   }, [shop.preview]);
@@ -159,6 +165,25 @@ export default function Cart({
                 </label>
               </div>
               <label>
+                المحافظة
+                <select
+                  name="governorate"
+                  aria-label="المحافظة"
+                  required
+                  value={governorate}
+                  onChange={(e) => setGovernorate(e.target.value as GovernorateId | "")}
+                >
+                  <option value="" disabled>
+                    اختر المحافظة
+                  </option>
+                  {Object.entries(GOVERNORATE_NAMES).map(([id, name]) => (
+                    <option key={id} value={id}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
                 عنوان التوصيل
                 <textarea
                   name="address"
@@ -201,17 +226,20 @@ export default function Cart({
                 <pre>{shop.preview}</pre>
               </div>
             )}
-            <p className="sf-confirm-note">
-              <ShieldCheck aria-hidden="true" size={16} />
-              فتح واتساب لا يؤكد الطلب؛ أرسلي الرسالة لتأكيده مع الصيدلية.
-            </p>
           </div>
           <div className="sf-cart-summary">
             <div>
               <span>إجمالي المنتجات</span>
               <Price value={shop.total} />
             </div>
-            <p>رسوم التوصيل تُؤكَّد عبر واتساب</p>
+            <div>
+              <span>رسوم التوصيل</span>
+              {fee === null ? <small>اختر المحافظة</small> : <Price value={fee} />}
+            </div>
+            <div>
+              <span>{fee === null ? "الإجمالي قبل التوصيل" : "الإجمالي"}</span>
+              <Price value={shop.total + (fee ?? 0)} />
+            </div>
             <button
               className="sf-primary"
               type="submit"

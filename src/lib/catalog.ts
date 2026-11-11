@@ -1,4 +1,9 @@
 import { z } from "zod";
+import {
+  GOVERNORATE_IDS,
+  GOVERNORATE_NAMES,
+  deliveryFee,
+} from "@/lib/delivery";
 /** A category row from the categories table (loaded from the database, never hardcoded). */
 export type Category = {
   id: string;
@@ -54,6 +59,7 @@ export const checkoutSchema = z
         .string()
         .trim()
         .regex(/^(?:07\d{9}|\+?9647\d{9})$/, "أدخل رقم هاتف عراقي صحيحاً"),
+      governorate: z.enum(GOVERNORATE_IDS, { error: "اختر المحافظة" }),
       address: z.string().trim().min(8, "أدخل عنوان التوصيل بالتفصيل").max(500),
       notes: z.string().trim().max(1000).default(""),
     }),
@@ -109,10 +115,12 @@ export function reviewOrder(
   if (changes.length) return { changes, url: null };
   const total = lines.reduce((s, l) => s + l.p!.price * l.quantity, 0);
   const { customer: c } = input;
+  const fee = deliveryFee(c.governorate);
   const message = [
     "طلب جديد — صيدلية حياة المجد",
     `الاسم: ${c.name}`,
     `الهاتف: ${c.phone}`,
+    `المحافظة: ${GOVERNORATE_NAMES[c.governorate]}`,
     `عنوان التوصيل: ${c.address}`,
     "",
     ...lines.map(
@@ -121,7 +129,8 @@ export function reviewOrder(
     ),
     "",
     `إجمالي المنتجات: ${money(total)}`,
-    "رسوم التوصيل تُؤكد عبر واتساب.",
+    `رسوم التوصيل: ${money(fee)}`,
+    `الإجمالي: ${money(total + fee)}`,
     ...(c.notes ? [`ملاحظات: ${c.notes}`] : []),
     "يرجى تأكيد توفر المنتجات والطلب والتوصيل.",
   ].join("\n");
