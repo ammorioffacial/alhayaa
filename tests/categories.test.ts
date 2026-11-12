@@ -3,13 +3,17 @@ import assert from "node:assert/strict";
 import {
   ACCENT_PALETTE,
   CATEGORY_MESSAGES,
-  canAddCategory,
+  canAddMainSection,
+  canAddSubcategory,
+  categoryCreateSchema,
   categoryFieldsSchema,
   categoryUpdateSchema,
   deleteRule,
   generateSlug,
-  MAX_CATEGORIES,
+  MAX_MAIN_SECTIONS,
+  MAX_SUBCATEGORIES,
 } from "../src/lib/category-rules";
+import { coverage, isLeaf, mainSections, subcategoriesOf } from "../src/lib/category-tree";
 import { productCount } from "../src/lib/arabic-plural";
 import { nonEmptyPriceBands } from "../src/lib/admin-stats";
 import { demoCategories } from "../src/lib/demo";
@@ -75,12 +79,45 @@ test("an empty category is deleted directly, with no target", () => {
 test("the completed-delete message uses the moved count", () => {
   assert.equal(CATEGORY_MESSAGES.deleted(4), "تم حذف التصنيف ونقل 4 منتجات.");
 });
-// Maximum of eight.
-test("no more than eight categories can exist", () => {
-  assert.equal(MAX_CATEGORIES, 8);
-  assert.equal(canAddCategory(7).ok, true);
-  const full = canAddCategory(8);
-  assert.deepEqual(full, { ok: false, message: "لا يمكن إضافة أكثر من 8 تصنيفات." });
+// Limits: eight main sections, fifteen subcategories per section.
+test("no more than eight main sections, and fifteen subcategories per section", () => {
+  assert.equal(MAX_MAIN_SECTIONS, 8);
+  assert.equal(MAX_SUBCATEGORIES, 15);
+  assert.equal(canAddMainSection(7).ok, true);
+  assert.deepEqual(canAddMainSection(8), { ok: false, message: "لا يمكن إضافة أكثر من 8 أقسام رئيسية." });
+  assert.equal(canAddSubcategory(14).ok, true);
+  assert.deepEqual(canAddSubcategory(15), {
+    ok: false,
+    message: "لا يمكن إضافة أكثر من 15 قسماً فرعياً داخل القسم الواحد.",
+  });
+});
+// Main sections and subcategories.
+test("a main section with subcategories cannot be deleted until they are removed", () => {
+  const r = deleteRule({ categoryCount: 9, productCount: 0, childCount: 2, targetId: null, sourceId: "a" });
+  assert.deepEqual(r, { ok: false, message: "هذا القسم فيه 2 أقسام فرعية. احذفها أولاً." });
+});
+test("subcategories are listed under their main section, and coverage includes them", () => {
+  const cats = [
+    { id: "m", parent_id: null },
+    { id: "s1", parent_id: "m" },
+    { id: "s2", parent_id: "m" },
+    { id: "other", parent_id: null },
+  ] as const;
+  const all = cats.map((c) => ({ ...c })) as unknown as Parameters<typeof mainSections>[0];
+  assert.deepEqual(mainSections(all).map((c) => c.id), ["m", "other"]);
+  assert.deepEqual(subcategoriesOf(all, "m").map((c) => c.id), ["s1", "s2"]);
+  assert.equal(isLeaf(all, "m"), false);
+  assert.equal(isLeaf(all, "s1"), true);
+  assert.deepEqual([...coverage(all, "m")].sort(), ["m", "s1", "s2"]);
+  assert.deepEqual([...coverage(all, "s1")], ["s1"]);
+});
+test("create payload carries the parent; the edit payload cannot change it", () => {
+  const base = { name_ar: "الغسول", description_ar: "", image_path: "", accent: ACCENT_PALETTE[0], is_visible: true };
+  const parentId = "00000000-0000-4000-8000-0000000000c1";
+  assert.equal(categoryCreateSchema.parse({ ...base, parent_id: parentId }).parent_id, parentId);
+  assert.equal(categoryCreateSchema.parse({ ...base }).parent_id, null);
+  const edited = categoryUpdateSchema.parse({ id: parentId, ...base, parent_id: "00000000-0000-4000-8000-0000000000c9" });
+  assert.equal("parent_id" in edited, false);
 });
 // Arabic plural helper and price bands.
 test("product counts follow the Arabic agreement rules, with Western digits", () => {
@@ -105,5 +142,16 @@ test("demo categories use the four palette colors and valid slugs", () => {
     assert.ok((ACCENT_PALETTE as readonly string[]).includes(c.accent));
     assert.match(c.slug, /^[a-z0-9-]{2,40}$/);
   }
-  assert.deepEqual(demoCategories.map((c) => c.slug), ["skin-care", "hair-care", "sun-care", "cosmetics"]);
+  assert.deepEqual(demoCategories.map((c) => c.slug), [
+    "skin-care",
+    "skin-cleanser",
+    "skin-serum",
+    "skin-moisturizer",
+    "hair-care",
+    "sun-care",
+    "cosmetics",
+  ]);
+  // Every subcategory points at a main section that is in the list.
+  for (const c of demoCategories)
+    if (c.parent_id) assert.ok(demoCategories.some((p) => p.id === c.parent_id && p.parent_id === null));
 });

@@ -1,16 +1,54 @@
 import type { Category, Product } from "./catalog";
 // Demo fixtures (DEMO_MODE only). Category names and marketing text here are fixture data.
+const demoSkin: Category = {
+  id: "00000000-0000-4000-8000-0000000000c1",
+  name_ar: "العناية بالبشرة",
+  slug: "skin-care",
+  description_ar: "كل ما يحتاجه روتينكِ",
+  image_path: "/images/categories/skincare-care.webp",
+  accent: "#0f2b45",
+  sort_order: 1,
+  is_visible: true,
+  parent_id: null,
+};
+const demoCleanser: Category = {
+  id: "00000000-0000-4000-8000-0000000000c5",
+  name_ar: "الغسول",
+  slug: "skin-cleanser",
+  description_ar: null,
+  image_path: null,
+  accent: "#0f2b45",
+  sort_order: 1,
+  is_visible: true,
+  parent_id: demoSkin.id,
+};
+const demoSerum: Category = {
+  id: "00000000-0000-4000-8000-0000000000c6",
+  name_ar: "السيرم",
+  slug: "skin-serum",
+  description_ar: null,
+  image_path: null,
+  accent: "#0f2b45",
+  sort_order: 2,
+  is_visible: true,
+  parent_id: demoSkin.id,
+};
+const demoMoisturizer: Category = {
+  id: "00000000-0000-4000-8000-0000000000c7",
+  name_ar: "مرطب الوجه",
+  slug: "skin-moisturizer",
+  description_ar: null,
+  image_path: null,
+  accent: "#0f2b45",
+  sort_order: 3,
+  is_visible: true,
+  parent_id: demoSkin.id,
+};
 export const demoCategories: Category[] = [
-  {
-    id: "00000000-0000-4000-8000-0000000000c1",
-    name_ar: "العناية بالبشرة",
-    slug: "skin-care",
-    description_ar: "كل ما يحتاجه روتينكِ",
-    image_path: "/images/categories/skincare-care.webp",
-    accent: "#0f2b45",
-    sort_order: 1,
-    is_visible: true,
-  },
+  demoSkin,
+  demoCleanser,
+  demoSerum,
+  demoMoisturizer,
   {
     id: "00000000-0000-4000-8000-0000000000c2",
     name_ar: "العناية بالشعر",
@@ -20,6 +58,7 @@ export const demoCategories: Category[] = [
     accent: "#28578e",
     sort_order: 2,
     is_visible: true,
+    parent_id: null,
   },
   {
     id: "00000000-0000-4000-8000-0000000000c3",
@@ -30,6 +69,7 @@ export const demoCategories: Category[] = [
     accent: "#c9a35a",
     sort_order: 3,
     is_visible: true,
+    parent_id: null,
   },
   {
     id: "00000000-0000-4000-8000-0000000000c4",
@@ -40,16 +80,17 @@ export const demoCategories: Category[] = [
     accent: "#b86c7b",
     sort_order: 4,
     is_visible: true,
+    parent_id: null,
   },
 ];
-const [skin, hair, sun, cosmetics] = demoCategories;
+const [, cleanser, serum, moisturizer, hair, sun, cosmetics] = demoCategories;
 export const demoProducts: Product[] = [
   {
     id: "00000000-0000-4000-8000-000000000001",
     name: "غسول الوجه المرطب",
     brand: "HAYAT CARE",
-    category_id: skin.id,
-    category: skin,
+    category_id: cleanser.id,
+    category: cleanser,
     description:
       "منتج توضيحي لعرض تجربة المتجر. استبدل هذه البيانات والوصف والصورة ببيانات المنتج الفعلي قبل البيع.",
     price: 24000,
@@ -62,8 +103,8 @@ export const demoProducts: Product[] = [
     id: "00000000-0000-4000-8000-000000000002",
     name: "سيروم العناية بالبشرة",
     brand: "DAILY RITUAL",
-    category_id: skin.id,
-    category: skin,
+    category_id: serum.id,
+    category: serum,
     description:
       "بيانات تجريبية وصورة توضيحية، وليست عرضاً تجارياً أو توصية علاجية.",
     price: 32000,
@@ -103,8 +144,8 @@ export const demoProducts: Product[] = [
     id: "00000000-0000-4000-8000-000000000005",
     name: "كريم ترطيب الوجه",
     brand: "HAYAT CARE",
-    category_id: skin.id,
-    category: skin,
+    category_id: moisturizer.id,
+    category: moisturizer,
     description: "بيانات تجريبية لاختبار المتجر فقط.",
     price: 26000,
     image_url: "/products/cream.svg",

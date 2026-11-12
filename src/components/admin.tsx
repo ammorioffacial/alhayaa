@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ExternalLink, LogOut, Plus } from "lucide-react";
 import { formatPrice, type Category, type Product } from "@/lib/catalog";
 import { productCount } from "@/lib/arabic-plural";
+import { isLeaf, labelOf } from "@/lib/category-tree";
 import Brand from "./brand";
 import AdminDashboard from "./admin-dashboard";
 /** The product form's draft. The category is chosen by id from the categories table. */
@@ -24,7 +25,7 @@ function emptyDraft(categories: Category[]): Draft {
   return {
     name: "",
     brand: "",
-    category_id: categories[0]?.id ?? "",
+    category_id: categories.find((c) => isLeaf(categories, c.id))?.id ?? "",
     description: "",
     price: 0,
     image_url: "",
@@ -223,10 +224,11 @@ export default function Admin({
                 >
                   {/* Visible categories, plus the product's current one even if it is hidden. */}
                   {categories
+                    .filter((c) => isLeaf(categories, c.id))
                     .filter((c) => c.is_visible || c.id === draft.category_id)
                     .map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.name_ar}
+                        {labelOf(categories, c)}
                         {!c.is_visible ? " (مخفي)" : ""}
                       </option>
                     ))}
@@ -349,12 +351,14 @@ export default function Admin({
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="الكل">الكل</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name_ar}
-              {!c.is_visible ? " (مخفي)" : ""}
-            </option>
-          ))}
+          {categories
+            .filter((c) => isLeaf(categories, c.id))
+            .map((c) => (
+              <option key={c.id} value={c.id}>
+                {labelOf(categories, c)}
+                {!c.is_visible ? " (مخفي)" : ""}
+              </option>
+            ))}
         </select>
         <span role="status">
           {productCount(shown.length)}

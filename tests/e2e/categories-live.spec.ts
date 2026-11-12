@@ -15,7 +15,7 @@ test("admin adds a category, assigns a product, hides it, and deletes it with a 
   await page.waitForURL("**/admin");
   // Add a category with a description and no image.
   await page.goto("/admin/categories");
-  await page.getByRole("button", { name: "إضافة تصنيف" }).click();
+  await page.getByRole("button", { name: "إضافة قسم رئيسي" }).click();
   await page.getByLabel("اسم التصنيف").fill(label);
   await page.getByLabel("وصف قصير (اختياري، حتى 120 حرفاً)").fill("وصف تجريبي للتصنيف");
   await page.getByRole("button", { name: "حفظ التصنيف" }).click();

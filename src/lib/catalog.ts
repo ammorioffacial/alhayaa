@@ -14,6 +14,8 @@ export type Category = {
   accent: string;
   sort_order: number;
   is_visible: boolean;
+  /** null for a main section; the main section's id for a subcategory. */
+  parent_id: string | null;
 };
 export const productSchema = z.object({
   name: z.string().trim().min(2).max(150),

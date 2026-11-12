@@ -20,7 +20,9 @@ test("price bands are inclusive and cover every product exactly once", () => {
 test("category counts follow the catalog order and sum to the total", () => {
   const stats = computeAdminStats(demoProducts, demoCategories);
   assert.equal(stats.byCategory.reduce((a, c) => a + c.count, 0), demoProducts.length);
-  assert.equal(stats.byCategory[0].name, "العناية بالبشرة");
+  // Only subcategories (leaves) are counted; the main section "العناية بالبشرة" holds no products itself.
+  assert.equal(stats.byCategory[0].name, "الغسول");
+  assert.equal(stats.byCategory.some((c) => c.name === "العناية بالبشرة"), false);
 });
 test("empty catalog returns zeros, not NaN", () => {
   const stats = computeAdminStats([], demoCategories);

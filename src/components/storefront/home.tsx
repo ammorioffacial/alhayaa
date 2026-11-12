@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import type { Category, Product } from "@/lib/catalog";
 import { productCount } from "@/lib/arabic-plural";
+import { coverage, mainSections, productsIn } from "@/lib/category-tree";
 import Brand from "../brand";
 import ProductCard from "./product-card";
 import ProductDetail from "./product-detail";
@@ -81,13 +82,16 @@ export default function Store({
   loadError?: string;
   heroVideos?: HeroClip[];
 }) {
-  // Only visible categories that have at least one product are shown (owner decision).
-  const categories = allCategories.filter(
-    (c) => c.is_visible && products.some((p) => p.category?.slug === c.slug),
+  // Main sections that have at least one product (in the section or in its subcategories) are shown.
+  // Subcategories appear under the selected section (owner decision: no empty sections on the storefront).
+  const categories = mainSections(allCategories).filter(
+    (c) => c.is_visible && productsIn(products, allCategories, c.id).length > 0,
   );
   const [search, setSearch] = useState("");
   // Selected category slug, or "الكل" for every product.
   const [category, setCategory] = useState("الكل");
+  const selectedCategory = allCategories.find((c) => c.slug === category);
+  const selectionIds = selectedCategory ? coverage(allCategories, selectedCategory.id) : null;
   const [selected, setSelected] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [active, setActive] = useState<Destination>("home");
@@ -127,7 +131,7 @@ export default function Store({
         // Products in a hidden category stay in the admin only.
         p.category !== null &&
         p.category.is_visible &&
-        (category === "الكل" || p.category.slug === category) &&
+        (!selectionIds || selectionIds.has(p.category.id)) &&
         `${p.name} ${p.brand}`
           .toLocaleLowerCase("ar")
           .includes(search.trim().toLocaleLowerCase("ar")) &&
@@ -409,7 +413,7 @@ export default function Store({
               selected={category}
               onSelect={choose}
               products={products}
-              categories={categories}
+              categories={allCategories}
             />
             <section
               id="catalog"
@@ -425,7 +429,7 @@ export default function Store({
                       : search
                         ? "نتائج البحث"
                         : category !== "الكل"
-                          ? categories.find((c) => c.slug === category)?.name_ar ?? category
+                          ? selectedCategory?.name_ar ?? category
                           : isFiltered
                             ? "منتجات العناية"
                             : featured.length

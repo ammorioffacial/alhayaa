@@ -1,4 +1,5 @@
 import type { Category, Product } from "./catalog";
+import { isLeaf } from "./category-tree";
 // Pure statistics for the admin dashboard, computed from the catalog only.
 // Orders and searches are not tracked yet, so this module does not report them.
 export const priceBands = [
@@ -40,8 +41,8 @@ export function computeAdminStats(products: Product[], categories: Category[]): 
     averagePrice: total ? Math.round(sum / total) : 0,
     minPrice: total ? Math.min(...prices) : 0,
     maxPrice: total ? Math.max(...prices) : 0,
-    // Every category from the table, including ones with zero products.
-    byCategory: categories.map((c) => ({
+    // Products belong to subcategories (or to sections without any), so only those are counted.
+    byCategory: categories.filter((c) => isLeaf(categories, c.id)).map((c) => ({
       name: c.name_ar,
       count: products.filter((p) => p.category_id === c.id).length,
     })),

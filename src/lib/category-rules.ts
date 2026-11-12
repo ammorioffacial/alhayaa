@@ -1,7 +1,10 @@
 import { z } from "zod";
 // Pure category rules: no database or network access, so they can be unit tested.
-// The database enforces the same limits (migration 0001 trigger, migration 0002 functions).
-export const MAX_CATEGORIES = 8;
+// The database enforces the same limits (migrations 0001, 0002, 0003).
+/** At most this many main sections (parent_id null). */
+export const MAX_MAIN_SECTIONS = 8;
+/** At most this many subcategories inside one main section. */
+export const MAX_SUBCATEGORIES = 15;
 /** The six palette colors. Must match the check constraint in migration 0001. */
 export const ACCENT_PALETTE = [
   "#0f2b45",
@@ -12,28 +15,40 @@ export const ACCENT_PALETTE = [
   "#8b6127",
 ] as const;
 export const CATEGORY_MESSAGES = {
-  maxReached: "لا يمكن إضافة أكثر من 8 تصنيفات.",
+  maxMainReached: `لا يمكن إضافة أكثر من ${MAX_MAIN_SECTIONS} أقسام رئيسية.`,
+  maxSubReached: `لا يمكن إضافة أكثر من ${MAX_SUBCATEGORIES} قسماً فرعياً داخل القسم الواحد.`,
   lastCategory: "يجب أن يبقى تصنيف واحد على الأقل.",
+  hasChildren: (n: number) => `هذا القسم فيه ${n} أقسام فرعية. احذفها أولاً.`,
   needsTarget: (n: number) =>
     `هذا التصنيف فيه ${n} منتجات. اختر تصنيفاً لنقلها إليه قبل الحذف.`,
   deleted: (n: number) => `تم حذف التصنيف ونقل ${n} منتجات.`,
   slugLocked: "لا يمكن تغيير رابط التصنيف (slug) بعد إنشائه.",
+  parentNotMain: "القسم الأب يجب أن يكون قسماً رئيسياً.",
+  parentHasProducts: "هذا القسم فيه منتجات. انقلها إلى قسم آخر قبل إضافة أقسام فرعية إليه.",
 } as const;
-/** Whether one more category may be created. */
-export function canAddCategory(existingCount: number) {
-  return existingCount < MAX_CATEGORIES
+/** Whether one more main section may be created. */
+export function canAddMainSection(mainCount: number) {
+  return mainCount < MAX_MAIN_SECTIONS
     ? { ok: true as const }
-    : { ok: false as const, message: CATEGORY_MESSAGES.maxReached };
+    : { ok: false as const, message: CATEGORY_MESSAGES.maxMainReached };
+}
+/** Whether one more subcategory may be created inside a main section. */
+export function canAddSubcategory(siblingCount: number) {
+  return siblingCount < MAX_SUBCATEGORIES
+    ? { ok: true as const }
+    : { ok: false as const, message: CATEGORY_MESSAGES.maxSubReached };
 }
 /**
  * The delete rule, applied on the server before the database function runs.
  * - The last remaining category cannot be deleted.
+ * - A main section with subcategories cannot be deleted until they are removed.
  * - A category with products needs a different target category.
  * - An empty category is deleted directly (no target needed).
  */
 export function deleteRule(input: {
   categoryCount: number;
   productCount: number;
+  childCount?: number;
   targetId: string | null;
   sourceId: string;
 }):
@@ -41,6 +56,8 @@ export function deleteRule(input: {
   | { ok: false; message: string } {
   if (input.categoryCount <= 1)
     return { ok: false, message: CATEGORY_MESSAGES.lastCategory };
+  if ((input.childCount ?? 0) > 0)
+    return { ok: false, message: CATEGORY_MESSAGES.hasChildren(input.childCount!) };
   if (input.productCount > 0) {
     if (!input.targetId)
       return { ok: false, message: CATEGORY_MESSAGES.needsTarget(input.productCount) };
@@ -93,7 +110,14 @@ export const categoryFieldsSchema = z.object({
   is_visible: z.boolean(),
 });
 export type CategoryFields = z.infer<typeof categoryFieldsSchema>;
-/** Edit payload: the id plus the editable fields. Any other key (including slug) is dropped. */
+/** Create payload: the fields plus the parent (null for a main section). */
+export const categoryCreateSchema = categoryFieldsSchema.extend({
+  parent_id: z.string().uuid().nullable().optional().transform((v) => v ?? null),
+});
+/**
+ * Edit payload: the id plus the editable fields. Any other key (slug, parent_id) is dropped,
+ * so neither the link nor the parent can change after creation.
+ */
 export const categoryUpdateSchema = categoryFieldsSchema.extend({
   id: z.string().uuid(),
 });

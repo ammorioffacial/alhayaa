@@ -5,7 +5,19 @@ import type { Category, Product } from "./catalog";
 // Embedded category: visitors only receive visible categories (categories RLS), so products in
 // hidden categories come back with category = null and are not shown on the storefront.
 export const PRODUCT_SELECT =
-  "*, category:categories(id,name_ar,slug,description_ar,image_path,accent,sort_order,is_visible)";
+  "*, category:categories(id,name_ar,slug,description_ar,image_path,accent,sort_order,is_visible,parent_id)";
+/**
+ * A subcategory is hidden when its main section is hidden. The categories list already leaves out
+ * hidden rows, so a product whose main section is missing from it is treated as having no category.
+ */
+function withHiddenParents(products: Product[], categories: Category[]): Product[] {
+  const visible = new Set(categories.map((c) => c.id));
+  return products.map((p) =>
+    p.category && p.category.parent_id && !visible.has(p.category.parent_id)
+      ? { ...p, category: null }
+      : p,
+  );
+}
 /** Storefront data: products plus the visible categories, ordered by sort_order. */
 export async function getStorefrontData(): Promise<{
   products: Product[];
@@ -14,7 +26,11 @@ export async function getStorefrontData(): Promise<{
 }> {
   if (!configured()) {
     if (process.env.DEMO_MODE === "true")
-      return { products: demoProducts, categories: demoCategories, demo: true };
+      return {
+        products: withHiddenParents(demoProducts, demoCategories),
+        categories: demoCategories,
+        demo: true,
+      };
     return { products: [], categories: [], demo: false };
   }
   const db = await supabase();
@@ -24,9 +40,10 @@ export async function getStorefrontData(): Promise<{
   ]);
   if (products.error || categories.error)
     throw new Error("تعذر تحميل المنتجات. يرجى المحاولة لاحقاً.");
+  const visibleCategories = (categories.data ?? []) as Category[];
   return {
-    products: (products.data ?? []) as Product[],
-    categories: (categories.data ?? []) as Category[],
+    products: withHiddenParents((products.data ?? []) as Product[], visibleCategories),
+    categories: visibleCategories,
     demo: false,
   };
 }

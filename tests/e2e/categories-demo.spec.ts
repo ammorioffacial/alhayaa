@@ -19,3 +19,15 @@ test("category counts are Arabic plural phrases with Western digits", async ({ p
   const hair = page.locator(".sf-categories").getByRole("button", { name: "العناية بالشعر", exact: true });
   await expect(hair).toContainText("منتج واحد");
 });
+test("a main section opens its subcategories, and a subcategory narrows the catalog", async ({ page }) => {
+  await page.goto("/");
+  const row = page.locator(".sf-categories");
+  await row.getByRole("button", { name: "العناية بالبشرة", exact: true }).click();
+  const subs = page.locator(".sf-subcategories");
+  for (const name of ["الغسول", "السيرم", "مرطب الوجه"])
+    await expect(subs.getByRole("button", { name, exact: false })).toBeVisible();
+  await expect(page.locator(".sf-product")).toHaveCount(3);
+  await subs.getByRole("button", { name: "السيرم", exact: false }).click();
+  await expect(page.locator(".sf-product")).toHaveCount(1);
+  await expect(page.locator(".sf-product")).toContainText("سيروم العناية بالبشرة");
+});

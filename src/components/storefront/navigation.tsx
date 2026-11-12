@@ -4,10 +4,14 @@
 import { Home, LayoutGrid, ShoppingBag, Heart, ArrowUpLeft, Sparkles } from "lucide-react";
 import { productCount } from "@/lib/arabic-plural";
 import type { Category, Product } from "@/lib/catalog";
+import { mainSections, productsIn, subcategoriesOf } from "@/lib/category-tree";
 import { useReveal } from "./use-reveal";
 export type Destination =
   "home" | "categories" | "search" | "favorites" | "cart";
-/** Category shortcuts: image when the category has one, otherwise a circular badge in its accent color. */
+/**
+ * Category shortcuts: the main sections that have products. Choosing a section opens its
+ * subcategories in a row below. Image when the category has one, otherwise a circular badge in its accent color.
+ */
 export function CategoryShortcuts({
   selected,
   onSelect,
@@ -20,6 +24,12 @@ export function CategoryShortcuts({
   categories: Category[];
 }) {
   const reveal = useReveal<HTMLElement>();
+  const withProducts = (c: Category) => c.is_visible && productsIn(products, categories, c.id).length > 0;
+  const sections = mainSections(categories).filter(withProducts);
+  const selectedCategory = categories.find((c) => c.slug === selected);
+  // A subcategory keeps its main section open; a main section opens itself.
+  const openId = selectedCategory ? (selectedCategory.parent_id ?? selectedCategory.id) : null;
+  const subs = openId ? subcategoriesOf(categories, openId).filter(withProducts) : [];
   return (
     <section
       id="categories"
@@ -32,8 +42,8 @@ export function CategoryShortcuts({
         <span>تسوّقي حسب احتياجكِ</span>
       </div>
       <div className="sf-categories" aria-label="تصنيفات المنتجات">
-        {categories.map((category, i) => {
-          const count = products.filter((p) => p.category?.slug === category.slug).length;
+        {sections.map((category, i) => {
+          const count = productsIn(products, categories, category.id).length;
           const isSelected = selected === category.slug;
           return (
             <button
@@ -68,6 +78,22 @@ export function CategoryShortcuts({
           );
         })}
       </div>
+      {subs.length > 0 && (
+        <div className="sf-subcategories" role="group" aria-label="الأقسام الفرعية">
+          {subs.map((sub) => (
+            <button
+              key={sub.id}
+              type="button"
+              className={selected === sub.slug ? "is-selected" : ""}
+              aria-pressed={selected === sub.slug}
+              onClick={() => onSelect(sub.slug)}
+            >
+              {sub.name_ar}
+              <small>{productCount(productsIn(products, categories, sub.id).length)}</small>
+            </button>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

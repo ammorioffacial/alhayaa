@@ -264,3 +264,14 @@ Approved by the owner (option B). A product is orderable only if it is available
 
 Checks: `npm test` 27 of 27 passed (3 new checkout tests: hidden category refused, no category refused, visible category still orderable). Lint and typecheck exit 0. Playwright order-related tests (store, milestone, categories-demo): 8 passed, 1 failed. The failure is the known 360px dock-click interception.
 
+
+## Subcategories (migration 0003)
+
+- Two levels: main sections (parent_id null) and subcategories inside one main section. No deeper levels.
+- Limits: 8 main sections, 15 subcategories per section. The old limit of 8 total no longer applies.
+- A subcategory's parent is set at creation and cannot change. A section that holds products cannot get subcategories (checked by the API and the admin; the database checks the product side).
+- Products belong to leaf categories only: a section that has subcategories cannot hold products.
+- Storefront: a section is shown when it or one of its subcategories has products. Choosing a section opens its subcategories in a row below. A hidden section hides its subcategories.
+- Migration 0003 seeds: العناية بالفم (oral-care) and العناية بالجسم (body-care) as main sections, and 14 subcategories under العناية بالبشرة, العناية بالفم, and العناية بالجسم. The existing sections (hair-care, sun-care, cosmetics, and the existing ادوية section) stay as main sections.
+- The migration moves products that sat in skin-care to الغسول (skin-cleanser). Move them in the admin if that is wrong.
+- Verified with a local in-memory Postgres dry run: the migration commits; the limits, the hierarchy rules, the product rule, sibling moves, and deletes behave as specified.
