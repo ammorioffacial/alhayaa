@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 // Category management: main sections and their subcategories. Add, edit, reorder, hide, delete.
 // The server enforces every rule; the checks here only give faster feedback.
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowDown, ArrowUp, Eye, EyeOff, ImageOff, Pencil, Plus, Trash2 } from "lucide-react";
 import {
   ACCENT_PALETTE,
@@ -62,6 +62,11 @@ export default function AdminCategories({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(loadError);
   const [message, setMessage] = useState("");
+  const panelRef = useRef<HTMLDivElement>(null);
+  /** The editor, delete panel and messages sit above the table; bring them into view after an action. */
+  function reveal() {
+    setTimeout(() => panelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+  }
   const mains = mainSections(categories);
   const subCount = categories.length - mains.length;
   const atMainLimit = !canAddMainSection(mains.length).ok;
@@ -85,23 +90,36 @@ export default function AdminCategories({
       return true;
     } catch (e) {
       setError((e as Error).message);
+      reveal();
       return false;
     } finally {
       setBusy(false);
+      reveal();
     }
   }
   function openCreate(parentId: string | null = null) {
     const limit = parentId
       ? canAddSubcategory(subcategoriesOf(categories, parentId).length)
       : canAddMainSection(mains.length);
-    if (!limit.ok) return setError(limit.message);
+    const problem = !limit.ok
+      ? limit.message
+      : parentId && (counts[parentId] ?? 0) > 0
+        ? CATEGORY_MESSAGES.parentHasProducts
+        : "";
+    if (problem) {
+      setMessage("");
+      setError(problem);
+      return reveal();
+    }
     setError("");
     setMessage("");
     setForm(blankForm(parentId));
+    reveal();
   }
   function openEdit(c: Category) {
     setError("");
     setMessage("");
+    reveal();
     setForm({
       id: c.id,
       name_ar: c.name_ar,
@@ -155,6 +173,7 @@ export default function AdminCategories({
     const children = subcategoriesOf(categories, c.id);
     setError("");
     setMessage("");
+    reveal();
     if (children.length > 0) return setError(CATEGORY_MESSAGES.hasChildren(children.length));
     // Products can only move to a leaf (a section without subcategories), other than this one.
     const targets = categories.filter((o) => o.id !== c.id && isLeaf(categories, o.id));
@@ -171,7 +190,10 @@ export default function AdminCategories({
       targetId: n > 0 ? target || null : null,
       sourceId: category.id,
     });
-    if (!rule.ok) return setError(rule.message);
+    if (!rule.ok) {
+      setError(rule.message);
+      return reveal();
+    }
     const ok = await run(async () => {
       const data = await call("DELETE", { id: category.id, target_id: n > 0 ? target : null });
       return data.message as string;
@@ -227,6 +249,7 @@ export default function AdminCategories({
           <Plus size={19} aria-hidden="true" /> إضافة قسم رئيسي
         </button>
       </div>
+      <div ref={panelRef} className="admin-panel-anchor">
       {error && (
         <p className="field-error" role="alert">
           {error}
@@ -383,6 +406,7 @@ export default function AdminCategories({
           </div>
         </section>
       )}
+      </div>
       <div className="admin-table-wrap">
         <table className="admin-table">
           <caption className="sr-only">التصنيفات وإجراءات إدارتها</caption>
@@ -469,7 +493,7 @@ export default function AdminCategories({
                   <td>
                     {isMain && (
                       <button
-                        disabled={busy || !canAddSubcategory(children).ok || (counts[c.id] ?? 0) > 0}
+                        disabled={busy || !canAddSubcategory(children).ok}
                         title={(counts[c.id] ?? 0) > 0 ? CATEGORY_MESSAGES.parentHasProducts : undefined}
                         onClick={() => openCreate(c.id)}
                         aria-label={`إضافة قسم فرعي داخل ${c.name_ar}`}
