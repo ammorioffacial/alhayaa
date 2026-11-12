@@ -221,14 +221,119 @@ export default function AdminCategories({
       await call("PATCH", { id: c.id, direction });
     });
   }
-  /** Rows in display order: each main section followed by its subcategories. */
-  const rows: { c: Category; siblings: Category[] }[] = mains.flatMap((m) => {
-    const subs = subcategoriesOf(categories, m.id);
-    return [
-      { c: m, siblings: mains },
-      ...subs.map((s) => ({ c: s, siblings: subs })),
-    ];
-  });
+  /** One table row. Main sections are headers of their group; subcategories sit inside it. */
+  function renderRow(c: Category, siblings: Category[], parent?: Category) {
+    const index = siblings.findIndex((s) => s.id === c.id);
+    const isMain = !parent;
+    const children = isMain ? subcategoriesOf(categories, c.id).length : 0;
+    return (
+      <tr key={c.id} className={isMain ? "cat-main" : "cat-sub"}>
+        <td>
+          {c.image_path ? (
+            <img src={c.image_path} alt={c.name_ar} width={62} height={62} loading="lazy" />
+          ) : (
+            <span
+              aria-label="بدون صورة"
+              style={{
+                display: "grid",
+                placeItems: "center",
+                width: 62,
+                height: 62,
+                borderRadius: "50%",
+                background: c.accent,
+                color: "#ffffff",
+              }}
+            >
+              <ImageOff size={20} aria-hidden="true" />
+            </span>
+          )}
+        </td>
+        <td
+          className="cat-name"
+          style={isMain ? { borderInlineStart: `5px solid ${c.accent}` } : undefined}
+        >
+          {isMain ? (
+            <>
+              <strong>{c.name_ar}</strong>{" "}
+              <span className="cat-badge cat-badge-main">قسم رئيسي</span>
+              <small className="cat-meta">
+                {children > 0 ? `${children} أقسام فرعية` : "بدون أقسام فرعية"}
+              </small>
+            </>
+          ) : (
+            <>
+              <span className="cat-branch" aria-hidden="true">↳</span>
+              <strong>{c.name_ar}</strong>{" "}
+              <span className="cat-badge cat-badge-sub">قسم فرعي</span>
+              <small className="cat-meta">داخل «{parent.name_ar}»</small>
+            </>
+          )}
+        </td>
+        <td>
+          <code dir="ltr">{c.slug}</code>
+        </td>
+        <td>
+          {isMain && children > 0 ? (
+            <>
+              {productCount(sectionTotal(c))}
+              <small> (في الأقسام الفرعية)</small>
+            </>
+          ) : (
+            productCount(counts[c.id] ?? 0)
+          )}
+        </td>
+        <td>
+          <button
+            disabled={busy}
+            onClick={() => toggleVisible(c)}
+            aria-label={c.is_visible ? `إخفاء ${c.name_ar}` : `إظهار ${c.name_ar}`}
+          >
+            {c.is_visible ? <Eye size={18} aria-hidden="true" /> : <EyeOff size={18} aria-hidden="true" />}
+            {c.is_visible ? " ظاهر" : " مخفي"}
+          </button>
+        </td>
+        <td>
+          <button
+            disabled={busy || index === 0}
+            aria-label={`تحريك ${c.name_ar} لأعلى`}
+            onClick={() => move(c, "up")}
+          >
+            <ArrowUp size={18} aria-hidden="true" />
+          </button>
+          <button
+            disabled={busy || index === siblings.length - 1}
+            aria-label={`تحريك ${c.name_ar} لأسفل`}
+            onClick={() => move(c, "down")}
+          >
+            <ArrowDown size={18} aria-hidden="true" />
+          </button>
+        </td>
+        <td>
+          {isMain && (
+            <button
+              disabled={busy || !canAddSubcategory(children).ok}
+              title={(counts[c.id] ?? 0) > 0 ? CATEGORY_MESSAGES.parentHasProducts : undefined}
+              onClick={() => openCreate(c.id)}
+              aria-label={`إضافة قسم فرعي داخل ${c.name_ar}`}
+            >
+              <Plus size={16} aria-hidden="true" /> قسم فرعي
+            </button>
+          )}
+          <button disabled={busy} onClick={() => openEdit(c)} aria-label={`تعديل ${c.name_ar}`}>
+            <Pencil size={16} aria-hidden="true" /> تعديل
+          </button>
+          <button
+            className="admin-delete"
+            disabled={busy}
+            onClick={() => startDelete(c)}
+            aria-label={`حذف ${c.name_ar}`}
+          >
+            <Trash2 size={16} aria-hidden="true" /> حذف
+          </button>
+        </td>
+      </tr>
+    );
+  }
   const leafTargets = categories.filter((c) => isLeaf(categories, c.id));
   return (
     <main className="admin-shell">
@@ -283,20 +388,21 @@ export default function AdminCategories({
               </label>
             </div>
             <label>
-              القسم الأب
+              نوع التصنيف
               <select
                 name="category-parent"
                 disabled={!!form.id}
                 value={form.parent_id ?? ""}
                 onChange={(e) => setForm({ ...form, parent_id: e.target.value || null })}
               >
-                <option value="">قسم رئيسي (لا أب)</option>
+                <option value="">قسم رئيسي (يظهر عنواناً في المتجر)</option>
                 {mains.map((m) => (
                   <option key={m.id} value={m.id}>
-                    {m.name_ar}
+                    قسم فرعي داخل «{m.name_ar}»
                   </option>
                 ))}
               </select>
+              {form.id && <small>نوع التصنيف لا يتغير بعد الإنشاء.</small>}
             </label>
             <label>
               وصف قصير (اختياري، حتى 120 حرفاً)
@@ -407,6 +513,10 @@ export default function AdminCategories({
         </section>
       )}
       </div>
+      <p className="cat-legend">
+        <span className="cat-badge cat-badge-main">قسم رئيسي</span> يظهر عنواناً في المتجر ويضم أقسامه الفرعية.{" "}
+        <span className="cat-badge cat-badge-sub">قسم فرعي</span> زر داخل القسم الرئيسي، وتُضاف إليه المنتجات.
+      </p>
       <div className="admin-table-wrap">
         <table className="admin-table">
           <caption className="sr-only">التصنيفات وإجراءات إدارتها</caption>
@@ -421,102 +531,20 @@ export default function AdminCategories({
               <th scope="col">الإجراءات</th>
             </tr>
           </thead>
-          <tbody>
-            {rows.map(({ c, siblings }) => {
-              const index = siblings.findIndex((s) => s.id === c.id);
-              const isMain = c.parent_id === null;
-              const children = isMain ? subcategoriesOf(categories, c.id).length : 0;
-              return (
-                <tr key={c.id} className={isMain ? "" : "admin-subrow"}>
-                  <td>
-                    {c.image_path ? (
-                      <img src={c.image_path} alt={c.name_ar} width={62} height={62} loading="lazy" />
-                    ) : (
-                      <span
-                        aria-label="بدون صورة"
-                        style={{
-                          display: "grid",
-                          placeItems: "center",
-                          width: 62,
-                          height: 62,
-                          borderRadius: "50%",
-                          background: c.accent,
-                          color: "#ffffff",
-                        }}
-                      >
-                        <ImageOff size={20} aria-hidden="true" />
-                      </span>
-                    )}
-                  </td>
-                  <td style={{ paddingInlineStart: isMain ? undefined : 36 }}>
-                    {isMain ? <strong>{c.name_ar}</strong> : <>— {c.name_ar}</>}
-                  </td>
-                  <td>
-                    <code dir="ltr">{c.slug}</code>
-                  </td>
-                  <td>
-                    {isMain && children > 0 ? (
-                      <>
-                        {productCount(sectionTotal(c))}
-                        <small> (في {children} أقسام فرعية)</small>
-                      </>
-                    ) : (
-                      productCount(counts[c.id] ?? 0)
-                    )}
-                  </td>
-                  <td>
-                    <button
-                      disabled={busy}
-                      onClick={() => toggleVisible(c)}
-                      aria-label={c.is_visible ? `إخفاء ${c.name_ar}` : `إظهار ${c.name_ar}`}
-                    >
-                      {c.is_visible ? <Eye size={18} aria-hidden="true" /> : <EyeOff size={18} aria-hidden="true" />}
-                      {c.is_visible ? " ظاهر" : " مخفي"}
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      disabled={busy || index === 0}
-                      aria-label={`تحريك ${c.name_ar} لأعلى`}
-                      onClick={() => move(c, "up")}
-                    >
-                      <ArrowUp size={18} aria-hidden="true" />
-                    </button>
-                    <button
-                      disabled={busy || index === siblings.length - 1}
-                      aria-label={`تحريك ${c.name_ar} لأسفل`}
-                      onClick={() => move(c, "down")}
-                    >
-                      <ArrowDown size={18} aria-hidden="true" />
-                    </button>
-                  </td>
-                  <td>
-                    {isMain && (
-                      <button
-                        disabled={busy || !canAddSubcategory(children).ok}
-                        title={(counts[c.id] ?? 0) > 0 ? CATEGORY_MESSAGES.parentHasProducts : undefined}
-                        onClick={() => openCreate(c.id)}
-                        aria-label={`إضافة قسم فرعي داخل ${c.name_ar}`}
-                      >
-                        <Plus size={16} aria-hidden="true" /> قسم فرعي
-                      </button>
-                    )}
-                    <button disabled={busy} onClick={() => openEdit(c)} aria-label={`تعديل ${c.name_ar}`}>
-                      <Pencil size={16} aria-hidden="true" /> تعديل
-                    </button>
-                    <button
-                      className="admin-delete"
-                      disabled={busy}
-                      onClick={() => startDelete(c)}
-                      aria-label={`حذف ${c.name_ar}`}
-                    >
-                      <Trash2 size={16} aria-hidden="true" /> حذف
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
+          {mains.map((m) => {
+            const subs = subcategoriesOf(categories, m.id);
+            return (
+              <tbody className="cat-group" key={m.id}>
+                {renderRow(m, mains)}
+                {subs.map((sub) => renderRow(sub, subs, m))}
+                {subs.length === 0 && (
+                  <tr className="cat-empty">
+                    <td colSpan={7}>لا توجد أقسام فرعية داخل «{m.name_ar}». اضغط «قسم فرعي» لإضافة أول قسم.</td>
+                  </tr>
+                )}
+              </tbody>
+            );
+          })}
         </table>
         {!categories.length && <div className="empty">لا توجد تصنيفات بعد. أضف أول قسم رئيسي للمتجر.</div>}
       </div>

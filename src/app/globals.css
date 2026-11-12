@@ -496,6 +496,60 @@ svg {
 .admin-table .admin-delete:hover {
   background: var(--error-soft);
 }
+/* Categories: main sections are group headers; subcategories sit inside their group. */
+.cat-legend {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
+}
+.cat-group + .cat-group {
+  border-top: 10px solid #eef2f5;
+}
+.cat-main td {
+  background: #f6f8fa;
+}
+.cat-sub td {
+  background: #ffffff;
+}
+.cat-name {
+  min-width: 220px;
+}
+.cat-sub .cat-name {
+  padding-inline-start: 44px;
+}
+.cat-branch {
+  color: var(--gold);
+  font-size: 18px;
+  margin-inline-end: 8px;
+}
+.cat-badge {
+  display: inline-block;
+  margin-inline-start: 8px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.cat-badge-main {
+  background: var(--navy);
+  color: #ffffff;
+}
+.cat-badge-sub {
+  background: #fbf6ea;
+  color: #7a5c22;
+  border: 1px solid var(--gold);
+}
+.cat-meta {
+  display: block;
+  margin-top: 4px;
+}
+.cat-empty td {
+  color: var(--muted);
+  font-size: 13px;
+  padding-inline-start: 44px;
+}
 .admin-availability {
   display: inline-flex;
   align-items: center;
